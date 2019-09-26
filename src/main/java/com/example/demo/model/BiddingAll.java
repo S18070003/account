@@ -72,6 +72,16 @@ public class BiddingAll {
      *
      * @mbg.generated Wed Jul 17 22:42:39 CST 2019
      */
+    private String bidguaranteeyn;
+
+    public String getBidguaranteeyn() {
+        return bidguaranteeyn;
+    }
+
+    public void setBidguaranteeyn(String bidguaranteeyn) {
+        this.bidguaranteeyn = bidguaranteeyn;
+    }
+
     private String bidguaranteetype;
 
     /**

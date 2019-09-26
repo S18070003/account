@@ -29,6 +29,14 @@
     <result column="projectid" jdbcType="NVARCHAR" property="projectid" />
     <result column="projectname" jdbcType="NVARCHAR" property="projectname" />
   </resultMap>
+  <resultMap id="Monthly" type="com.example.demo.model.Monthly">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="projecthistory" jdbcType="NVARCHAR" property="projecthistory" />
+    <result column="projectcurrent" jdbcType="NVARCHAR" property="projectcurrent" />
+
+    <result column="projectid" jdbcType="NVARCHAR" property="projectid" />
+    <result column="projectname" jdbcType="NVARCHAR" property="projectname" />
+  </resultMap>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
@@ -190,4 +198,9 @@
       submitTime = #{submittime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="getMonthly" resultMap="Monthly" parameterType="java.util.HashMap">
+    select Project.projectname,Project.projectid,Weekly.id,Weekly.projecthistory,Weekly.projectcurrent from Weekly,RelationProjectWeekly,Project
+    where Weekly.id=RelationProjectWeekly.weeklyid and RelationProjectWeekly.projectid=Project.projectid;
+  </select>
 </mapper>

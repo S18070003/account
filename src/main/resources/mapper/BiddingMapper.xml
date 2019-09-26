@@ -46,6 +46,7 @@
     <result column="bidregion" jdbcType="NVARCHAR" property="bidregion" />
     <result column="bidrecordyn" jdbcType="NVARCHAR" property="bidrecordyn" />
     <result column="bidsafegrade" jdbcType="NVARCHAR" property="bidsafegrade" />
+    <result column="bidguaranteeyn" jdbcType="NVARCHAR" property="bidguaranteeyn" />
     <result column="bidguaranteetype" jdbcType="NVARCHAR" property="bidguaranteetype" />
     <result column="bidguaranteemoney" jdbcType="DOUBLE" property="bidguaranteemoney" />
     <result column="bidoperator" jdbcType="NVARCHAR" property="bidoperator" />
@@ -193,14 +194,14 @@
   </select>
   <select id="AllBiddingAll"  parameterType="java.lang.String" resultMap="BaseResultMap2">
     select b.id,b.biddiscardreason,b.bidlossreason,b.bidopenresult,b.bidreview,b.bidtargetmoney,b.submitTime,
-	p.projectid,p.projectname,p.bidabroad,p.bidguaranteemoney,p.bidguaranteetype,p.bidid,p.bidoperator,p.bidoprateregion,
+	p.projectid,p.projectname,p.bidabroad,p.bidguaranteemoney,p.bidguaranteeyn,p.bidguaranteetype,p.bidid,p.bidoperator,p.bidoprateregion,
 	p.bidreceivedate,p.bidrecordyn,p.bidregion,p.bidsafegrade,p.bidservicetype,p.bidstopdate,p.bidworkload
     from Bidding b,RelationProjectBidding r,Project p
     where r.projectid=p.projectid and r.biddingid=b.id;
   </select>
   <select id="ProjectBiddingAll"  parameterType="java.lang.String" resultMap="BaseResultMap2">
     select b.id,b.biddiscardreason,b.bidlossreason,b.bidopenresult,b.bidreview,b.bidtargetmoney,b.submitTime,
-	p.projectid,p.projectname,p.bidabroad,p.bidguaranteemoney,p.bidguaranteetype,p.bidid,p.bidoperator,p.bidoprateregion,
+	p.projectid,p.projectname,p.bidabroad,p.bidguaranteemoney,p.bidguaranteeyn,p.bidguaranteetype,p.bidid,p.bidoperator,p.bidoprateregion,
 	p.bidreceivedate,p.bidrecordyn,p.bidregion,p.bidsafegrade,p.bidservicetype,p.bidstopdate,p.bidworkload
     from Bidding b,RelationProjectBidding r,Project p
     where r.projectid=p.projectid and r.biddingid=b.id and p.projectid=#{id};

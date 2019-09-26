@@ -2,6 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.dao.WeeklyMapper;
 import com.example.demo.entity.Weekly;
+import com.example.demo.model.Monthly;
 import com.example.demo.model.WeeklyModel;
 import com.example.demo.service.weekly;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,4 +53,8 @@ public class weeklyImpl implements weekly {
     public int delete(int weeklyId){
         return weeklyMapper.deleteByPrimaryKey(weeklyId);
     }
+    @Override
+    public List<Monthly> getMonthly(){
+        return weeklyMapper.getMonthly();
+    };
 }

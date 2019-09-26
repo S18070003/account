@@ -23,6 +23,16 @@ public class BiddingBase {
 
     private String bidsafegrade;
 
+    private String bidguaranteeyn;
+
+    public String getBidguaranteeyn() {
+        return bidguaranteeyn;
+    }
+
+    public void setBidguaranteeyn(String bidguaranteeyn) {
+        this.bidguaranteeyn = bidguaranteeyn;
+    }
+
     private String bidguaranteetype;
 
     private Double bidguaranteemoney;

@@ -1,6 +1,7 @@
 package com.example.demo.dao;
 
 import com.example.demo.entity.Weekly;
+import com.example.demo.model.Monthly;
 import com.example.demo.model.WeeklyModel;
 import org.apache.ibatis.annotations.Param;
 
@@ -64,4 +65,5 @@ public interface WeeklyMapper {
     int countAll();
     int countWeek();
     int countMonth();
+    List<Monthly> getMonthly();
 }

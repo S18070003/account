@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.entity.RelationProjectWeekly;
 import com.example.demo.entity.Weekly;
+import com.example.demo.model.Monthly;
 import com.example.demo.model.WeeklyModel;
 import com.example.demo.service.relationProjectWeekly;
 import com.example.demo.service.weekly;
@@ -89,5 +90,9 @@ public class WeeklyController {
             data.put("idDelete",false);
         }
         return data;
+    }
+    @RequestMapping("/getMonthly")
+    public List<Monthly> getMonthly(){
+        return weeklyService.getMonthly();
     }
 }
