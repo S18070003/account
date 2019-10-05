@@ -10,6 +10,7 @@ import com.example.demo.service.weekly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -94,5 +95,9 @@ public class WeeklyController {
     @RequestMapping("/getMonthly")
     public List<Monthly> getMonthly(){
         return weeklyService.getMonthly();
+    }
+    @RequestMapping("/downloadAllWeekly")
+    public void download(HttpServletResponse response) throws Exception{
+        com.example.demo.controller.table.Weekly.getExcel(weeklyService.getAll(),response);
     }
 }

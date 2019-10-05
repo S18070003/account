@@ -26,6 +26,12 @@
     <result column="projectsuggestion" jdbcType="NVARCHAR" property="projectsuggestion" />
     <result column="submitTime" jdbcType="TIMESTAMP" property="submittime" />
 
+    <result column="department" jdbcType="NVARCHAR" property="department" />
+    <result column="projectgeneral" jdbcType="NVARCHAR" property="projectgeneral" />
+    <result column="projectestimateamount" jdbcType="NVARCHAR" property="projectestimateamount" />
+    <result column="projectcharger" jdbcType="NVARCHAR" property="projectcharger" />
+    <result column="bidregion" jdbcType="NVARCHAR" property="bidregion" />
+
     <result column="projectid" jdbcType="NVARCHAR" property="projectid" />
     <result column="projectname" jdbcType="NVARCHAR" property="projectname" />
   </resultMap>
@@ -63,15 +69,21 @@
           where Weekly.id=RelationProjectWeekly.weeklyid and RelationProjectWeekly.projectid=#{projectid,jdbcType=NVARCHAR}
   </select>
   <select id="selectAll" resultMap="Weekly">
-    select Project.projectname,Project.projectid,Weekly.* from Weekly,RelationProjectWeekly,Project
+    select Project.projectname,Project.projectid,Weekly.*,
+    Project.bidregion,Project.department,Project.projectcharger,Project.projectestimateamount,Project.projectgeneral
+    from Weekly,RelationProjectWeekly,Project
     where  Weekly.id=RelationProjectWeekly.weeklyid and RelationProjectWeekly.projectid=Project.projectid;
   </select>
   <select id="selectWeek" resultMap="Weekly" parameterType="java.util.HashMap">
-    select Project.projectname,Project.projectid,Weekly.* from Weekly,RelationProjectWeekly,Project
+    select Project.projectname,Project.projectid,Weekly.*,
+    Project.bidregion,Project.department,Project.projectcharger,Project.projectestimateamount,Project.projectgeneral
+    from Weekly,RelationProjectWeekly,Project
     where DATEDIFF(dd,Weekly.submitTime,GETDATE())&lt;=7 and Weekly.id=RelationProjectWeekly.weeklyid and RelationProjectWeekly.projectid=Project.projectid;
   </select>
   <select id="selectMonth" resultMap="Weekly" parameterType="java.util.HashMap">
-    select Project.projectname,Project.projectid,Weekly.* from Weekly,RelationProjectWeekly,Project
+    select Project.projectname,Project.projectid,Weekly.*,
+    Project.bidregion,Project.department,Project.projectcharger,Project.projectestimateamount,Project.projectgeneral
+    from Weekly,RelationProjectWeekly,Project
     where DATEDIFF(dd,Weekly.submitTime,GETDATE())&lt;=30 and Weekly.id=RelationProjectWeekly.weeklyid and RelationProjectWeekly.projectid=Project.projectid;
   </select>
   <select id="countAll" parameterType="java.lang.Integer" resultType="integer">
@@ -198,7 +210,6 @@
       submitTime = #{submittime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-
   <select id="getMonthly" resultMap="Monthly" parameterType="java.util.HashMap">
     select Project.projectname,Project.projectid,Weekly.id,Weekly.projecthistory,Weekly.projectcurrent from Weekly,RelationProjectWeekly,Project
     where Weekly.id=RelationProjectWeekly.weeklyid and RelationProjectWeekly.projectid=Project.projectid;
