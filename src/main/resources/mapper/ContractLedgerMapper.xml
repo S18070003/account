@@ -377,16 +377,57 @@
       submitTime = #{submittime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="HomeLedgerAll" resultMap="BaseResultMap1" >
+  <select id="HomeLedgerAll" parameterType="com.example.demo.model.LedgerSelect" resultMap="BaseResultMap1" >
     select p.projectid,p.projectname,p.contractyear,p.contractdepartment,
     p.contractopdepartment,p.contractobject,p.bidoprateregion,c.*
     from ContractLedger c,RelationProjectLedger r,Project p
-    where r.projectid=p.projectid and r.ledgerid=c.id;
+    where r.projectid=p.projectid and r.ledgerid=c.id
+    <if test="projectid != null and projectid !=''">
+      and p.projectid = #{projectid}
+    </if>
+    <if test="projectname != null and projectname !=''">
+      and p.projectname = #{projectname}
+    </if>
+    <if test="contractid != null and contractid !=''">
+      and c.contractid = #{contractid}
+    </if>
+    <if test="contractyear != 0">
+      and p.contractyear = #{contractyear}
+    </if>
+    <if test="contractid2 != null and contractid2 !=''">
+      and c.contractid2 = #{contractid2}
+    </if>
+    <if test="contractsignperson != null and contractsignperson !=''">
+      and c.contractsignperson = #{contractsignperson}
+    </if>
+    <if test="contractbelongcnooc != null and contractbelongcnooc !=''">
+      and c.contractbelongcnooc = #{contractbelongcnooc}
+    </if>
+    <if test="contractinprocess != null and contractinprocess !=''">
+      and c.contractinprocess = #{contractinprocess}
+    </if>
+    <if test="contractsignificant !=null and contractsignificant !=''">
+      and c.contractsignificant = #{contractsignificant}
+    </if>
+    <if test="contractyearlycnooc !=null and contractyearlycnooc !=''">
+      and c.contractyearlycnooc = #{contractyearlycnooc}
+    </if>
+    <if test="starttime != null">
+      and c.contractsigndate &gt;= #{starttime}
+    </if>
+    <if test="endtime != null">
+      and c.contractsigndate &lt;= #{endtime}
+    </if>
   </select>
   <select id="ProjectLedgerAll" resultMap="BaseResultMap1" >
     select p.projectid,p.projectname,p.contractyear,p.contractdepartment,
     p.contractopdepartment,p.contractobject,p.bidoprateregion,c.*
     from ContractLedger c,RelationProjectLedger r,Project p
     where r.projectid=p.projectid and r.ledgerid=c.id and p.projectid=#{id}
+  </select>
+  <select id="getMonthlyForDownload">
+    select p.projectid,p.projectname,c.* from Project as p left join RelationProjectLedger as r
+    on r.projectid=p.projectid  left join ContractLedger as c on r.ledgerid=c.id
+    where c.submitTime &gt;= #{starttime} and c.submitTime  &lt;= #{endtime}
   </select>
 </mapper>

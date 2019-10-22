@@ -9,7 +9,7 @@ public class WeeklyBase {
     private String department;
     private String projectgeneral;
 
-    private String projectestimateamount;
+    private Double projectestimateamount;
 
     private String projectcharger;
 
@@ -39,12 +39,15 @@ public class WeeklyBase {
     public void setProjectgeneral(String projectgeneral) {
         this.projectgeneral = projectgeneral == null ? null : projectgeneral.trim();
     }
-    public String getProjectestimateamount() {
+
+    public Double getProjectestimateamount() {
         return projectestimateamount;
     }
-    public void setProjectestimateamount(String projectestimateamount) {
-        this.projectestimateamount = projectestimateamount == null ? null : projectestimateamount.trim();
+
+    public void setProjectestimateamount(Double projectestimateamount) {
+        this.projectestimateamount = projectestimateamount;
     }
+
     public String getProjectcharger() {
         return projectcharger;
     }

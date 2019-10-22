@@ -2,6 +2,7 @@ package com.example.demo.dao;
 
 import com.example.demo.entity.ContractLedger;
 import com.example.demo.model.HomeAllLedger;
+import com.example.demo.model.LedgerSelect;
 
 import java.util.List;
 
@@ -57,6 +58,6 @@ public interface ContractLedgerMapper {
     List<ContractLedger> getAll();
     List<ContractLedger> getByProjectid(String id);
 
-    List<HomeAllLedger> HomeLedgerAll();
+    List<HomeAllLedger> HomeLedgerAll(LedgerSelect ledgerSelect);
     List<HomeAllLedger> ProjectLedgerAll(String id);
 }

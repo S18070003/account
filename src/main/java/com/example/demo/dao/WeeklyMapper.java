@@ -2,6 +2,7 @@ package com.example.demo.dao;
 
 import com.example.demo.entity.Weekly;
 import com.example.demo.model.Monthly;
+import com.example.demo.model.MonthlyDownload;
 import com.example.demo.model.WeeklyModel;
 import org.apache.ibatis.annotations.Param;
 
@@ -59,6 +60,8 @@ public interface WeeklyMapper {
 
     List<Weekly> getByProjectid(String projectid);
     List<WeeklyModel> selectAll();
+    List<WeeklyModel> selectAllByTime(@Param("starttime")String starttime,@Param("endtime")String endtime);
+
     List<WeeklyModel> selectWeek();
     List<WeeklyModel> selectMonth();
 
@@ -66,4 +69,5 @@ public interface WeeklyMapper {
     int countWeek();
     int countMonth();
     List<Monthly> getMonthly();
+    List<MonthlyDownload> getMonthlyForDownload(@Param("starttime")String starttime,@Param("endtime")String endtime);
 }

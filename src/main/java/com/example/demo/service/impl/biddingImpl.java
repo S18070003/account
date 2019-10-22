@@ -4,6 +4,7 @@ import com.example.demo.dao.BiddingMapper;
 import com.example.demo.entity.Bidding;
 import com.example.demo.model.BiddingAll;
 import com.example.demo.model.BiddingBase;
+import com.example.demo.model.BiddingSelect;
 import com.example.demo.model.HomeAllBidding;
 import com.example.demo.service.bidding;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class biddingImpl implements bidding {
         return biddingMapper.getHomeBiddingAll();
     }
     @Override
-    public List<BiddingAll>  AllBiddingAll(){ return biddingMapper.AllBiddingAll();}
+    public List<BiddingAll>  AllBiddingAll(BiddingSelect record){ return biddingMapper.AllBiddingAll(record);}
     @Override
     public List<BiddingAll> ProjectBiddingAll(String id){
         return biddingMapper.ProjectBiddingAll(id);

@@ -4,13 +4,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.demo.entity.RelationProjectWeekly;
 import com.example.demo.entity.Weekly;
 import com.example.demo.model.Monthly;
+import com.example.demo.model.MonthlyDownload;
+import com.example.demo.model.NewProjectInfo;
 import com.example.demo.model.WeeklyModel;
+import com.example.demo.service.project;
 import com.example.demo.service.relationProjectWeekly;
 import com.example.demo.service.weekly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +28,8 @@ public class WeeklyController {
     private weekly weeklyService;
     @Autowired
     private relationProjectWeekly relationProjectWeeklyService;
+    @Autowired
+    private project projectService;
     @RequestMapping("/get")
     public List<WeeklyModel> get(String mode){
         List<WeeklyModel> data=new ArrayList<WeeklyModel>();
@@ -92,12 +98,25 @@ public class WeeklyController {
         }
         return data;
     }
+    @RequestMapping("/downloadAllWeekly")
+    public void download(String start,String end,String name,HttpServletResponse response) throws Exception{
+        System.out.println(name);
+        com.example.demo.controller.table.Weekly.getExcel(weeklyService.selectAllByTime(start,end),name,response);
+    }
+//月报
     @RequestMapping("/getMonthly")
     public List<Monthly> getMonthly(){
         return weeklyService.getMonthly();
     }
-    @RequestMapping("/downloadAllWeekly")
-    public void download(HttpServletResponse response) throws Exception{
-        com.example.demo.controller.table.Weekly.getExcel(weeklyService.getAll(),response);
+    @RequestMapping("/downloadMonthly")
+    public void getMonthlyForDownload(String start,String end,HttpServletResponse response) throws Exception {
+        List<MonthlyDownload> list =weeklyService.getMonthlyForDownload(start,end);
+        List<NewProjectInfo>  list1=projectService.getNewProjectInfo(start,end);
+       com.example.demo.controller.table.Monthly.getExcel(list,list1,response);
+    }
+    @RequestMapping("/test")
+    public List<MonthlyDownload> test(String start,String end) throws Exception {
+        List<MonthlyDownload> list =weeklyService.getMonthlyForDownload(start,end);
+      return list;
     }
 }

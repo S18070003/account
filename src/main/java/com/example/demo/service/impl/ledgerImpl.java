@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.dao.ContractLedgerMapper;
 import com.example.demo.entity.ContractLedger;
 import com.example.demo.model.HomeAllLedger;
+import com.example.demo.model.LedgerSelect;
 import com.example.demo.service.ledger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,8 +37,8 @@ public class ledgerImpl implements ledger {
         return contractLedgerMapper.deleteByPrimaryKey(id);
     }
     @Override
-    public List<HomeAllLedger> getHomeLedgerAll(){
-        return contractLedgerMapper.HomeLedgerAll();
+    public List<HomeAllLedger> getHomeLedgerAll(LedgerSelect ledgerSelect){
+        return contractLedgerMapper.HomeLedgerAll(ledgerSelect);
     }
     @Override
     public List<HomeAllLedger> ProjectLedgerAll(String id){

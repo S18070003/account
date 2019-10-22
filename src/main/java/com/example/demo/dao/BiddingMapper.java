@@ -2,6 +2,7 @@ package com.example.demo.dao;
 
 import com.example.demo.entity.Bidding;
 import com.example.demo.model.BiddingAll;
+import com.example.demo.model.BiddingSelect;
 import com.example.demo.model.HomeAllBidding;
 
 import java.util.List;
@@ -60,6 +61,6 @@ public interface BiddingMapper {
     Bidding getByProjectid(String projectid);
 
     List<HomeAllBidding> getHomeBiddingAll();
-    List<BiddingAll> AllBiddingAll();
+    List<BiddingAll> AllBiddingAll(BiddingSelect record);
     List<BiddingAll> ProjectBiddingAll(String id);
 }

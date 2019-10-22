@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.demo.controller.table.Ledger;
 import com.example.demo.entity.Bidding;
 import com.example.demo.entity.RelationProjectBidding;
+import com.example.demo.model.BiddingAll;
+import com.example.demo.model.BiddingSelect;
 import com.example.demo.model.HomeAllBidding;
 import com.example.demo.service.bidding;
 import com.example.demo.service.relationProjectBidding;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -97,12 +100,29 @@ public class BiddingController {
         return data;
     }
     @RequestMapping("/getHomeBiddingAll")
-    public List<HomeAllBidding> getHomeBiddingAll(){
-        return biddingService.getHomeBiddingAll();
+    public List<BiddingAll> getHomeBiddingAll(@RequestBody BiddingSelect biddingSelect){
+        return biddingService.AllBiddingAll(biddingSelect);
     }
     @RequestMapping("/download")
-    public void export(HttpServletResponse response) throws Exception{
-        com.example.demo.controller.table.Bidding.getXlsx(biddingService.AllBiddingAll(),response);
+    public void export(@RequestParam("department") String department,@RequestParam("start")String start,@RequestParam("end")String end,HttpServletResponse response) throws Exception{
+        BiddingSelect biddingSelect=new BiddingSelect();
+
+        if (!department.equals("null")){
+            biddingSelect.setDepartment(department);
+        }else {
+            biddingSelect.setDepartment(null);
+        }
+        if (!start.equals("null")){
+            biddingSelect.setBidreceivedate(new Date(Long.parseLong(start)));
+        }else {
+            biddingSelect.setBidreceivedate(null);
+        }
+       if (!end.equals("null")){
+           biddingSelect.setBidstopdate(new Date(Long.parseLong(end)));
+       }else {
+           biddingSelect.setBidstopdate(null);
+       }
+        com.example.demo.controller.table.Bidding.getXlsx(biddingService.AllBiddingAll(biddingSelect),response);
     }
     @RequestMapping("/downloadProjectBidding")
     public void export1(HttpServletResponse response,String projectid) throws Exception{

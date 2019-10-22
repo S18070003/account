@@ -2,14 +2,19 @@ package com.example.demo.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.demo.common.CommonReturnType;
+import com.example.demo.controller.table.ProjectProgressWord;
 import com.example.demo.entity.Project;
 import com.example.demo.model.BiddingBase;
 import com.example.demo.model.LedgerBase;
 import com.example.demo.model.WeeklyBase;
 import com.example.demo.service.project;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -27,7 +32,6 @@ public class ProjectController {
     public JSONObject insert(@RequestBody Project project){
         JSONObject data=new JSONObject();
         int x=projectService.insert(project);
-        System.out.println(project.getBidreceivedate());
         if(x==1){
             data.put("isinsert",true);
         }else {
@@ -85,5 +89,24 @@ public class ProjectController {
     @RequestMapping("/getCode")
     public String getCode(){
         return projectService.getCode();
+    }
+
+    @RequestMapping("/importExcel")//导入excel
+    @ResponseBody
+    @Transactional
+    public CommonReturnType importExcel(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        if(fileName.matches("^.+\\.(?i)(xls)$")){//03版本excel,xls
+            projectService.importExcel(file,3);
+        }else if (fileName.matches("^.+\\.(?i)(xlsx)$")){//07版本,xlsx
+            projectService.importExcel(file,7);
+        }
+        return CommonReturnType.create(null);
+    }
+    @RequestMapping("/exportWord")
+    @Transactional
+    public CommonReturnType exportWord(HttpServletResponse response) throws Exception {
+        ProjectProgressWord.getWord(projectService.getAll(),response);
+        return (null);
     }
 }

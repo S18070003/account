@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.dao.WeeklyMapper;
 import com.example.demo.entity.Weekly;
 import com.example.demo.model.Monthly;
+import com.example.demo.model.MonthlyDownload;
 import com.example.demo.model.WeeklyModel;
 import com.example.demo.service.weekly;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,10 @@ public class weeklyImpl implements weekly {
     @Override
     public List<WeeklyModel> getAll(){
         return weeklyMapper.selectAll();
+    }
+    @Override
+    public List<WeeklyModel> selectAllByTime(String starttime,String endtime){
+        return weeklyMapper.selectAllByTime(starttime,endtime);
     }
     @Override
     public List<WeeklyModel> getWeekly(){
@@ -57,4 +62,8 @@ public class weeklyImpl implements weekly {
     public List<Monthly> getMonthly(){
         return weeklyMapper.getMonthly();
     };
+    @Override
+    public List<MonthlyDownload> getMonthlyForDownload(String starttime,String endtime){
+        return weeklyMapper.getMonthlyForDownload(starttime,endtime);
+    }
 }

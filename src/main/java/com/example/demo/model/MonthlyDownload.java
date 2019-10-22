@@ -2,27 +2,12 @@ package com.example.demo.model;
 
 import java.util.Date;
 
-public class WeeklyModel {
+public class MonthlyDownload {
     private Integer id;
     private String projectid;
     private String projectname;
 
-    private String department;
-
-
     private String projectgeneral;
-    private Double projectestimateamount;
-
-    public Double getProjectestimateamount() {
-        return projectestimateamount;
-    }
-
-    public void setProjectestimateamount(Double projectestimateamount) {
-        this.projectestimateamount = projectestimateamount;
-    }
-
-    private String projectcharger;
-   private String bidregion;
 
     private String projecthistory;
     private String projectcurrent;
@@ -32,13 +17,28 @@ public class WeeklyModel {
     private String projectsuggestion;
     private Date submittime;
 
-
-    public String getDepartment() {
-        return department;
+    public Integer getId() {
+        return id;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getProjectid() {
+        return projectid;
+    }
+
+    public void setProjectid(String projectid) {
+        this.projectid = projectid;
+    }
+
+    public String getProjectname() {
+        return projectname;
+    }
+
+    public void setProjectname(String projectname) {
+        this.projectname = projectname;
     }
 
     public String getProjectgeneral() {
@@ -49,76 +49,58 @@ public class WeeklyModel {
         this.projectgeneral = projectgeneral;
     }
 
-
-    public String getProjectcharger() {
-        return projectcharger;
-    }
-
-    public void setProjectcharger(String projectcharger) {
-        this.projectcharger = projectcharger;
-    }
-
-    public String getBidregion() {
-        return bidregion;
-    }
-
-    public String getProjectid() {
-        return projectid;
-    }
-    public void setProjectid(String projectid) {
-        this.projectid = projectid == null ? null : projectid.trim();
-    }
-    public String getProjectname() {
-        return projectname;
-    }
-    public void setProjectname(String projectname) {
-        this.projectname = projectname == null ? null : projectname.trim();
-    }
-    public Integer getId() {
-        return id;
-    }
-    public void setId(Integer id) {
-        this.id = id;
-    }
     public String getProjecthistory() {
         return projecthistory;
     }
+
     public void setProjecthistory(String projecthistory) {
-        this.projecthistory = projecthistory == null ? null : projecthistory.trim();
+        this.projecthistory = projecthistory;
     }
+
     public String getProjectcurrent() {
         return projectcurrent;
     }
+
     public void setProjectcurrent(String projectcurrent) {
-        this.projectcurrent = projectcurrent == null ? null : projectcurrent.trim();
+        this.projectcurrent = projectcurrent;
     }
+
     public Date getProjectstarttime() {
         return projectstarttime;
     }
+
     public void setProjectstarttime(Date projectstarttime) {
         this.projectstarttime = projectstarttime;
     }
+
     public String getProjectplan() {
         return projectplan;
     }
+
     public void setProjectplan(String projectplan) {
-        this.projectplan = projectplan == null ? null : projectplan.trim();
+        this.projectplan = projectplan;
     }
+
     public String getProjectdifficulty() {
         return projectdifficulty;
     }
+
     public void setProjectdifficulty(String projectdifficulty) {
-        this.projectdifficulty = projectdifficulty == null ? null : projectdifficulty.trim();
+        this.projectdifficulty = projectdifficulty;
     }
+
     public String getProjectsuggestion() {
         return projectsuggestion;
     }
+
     public void setProjectsuggestion(String projectsuggestion) {
-        this.projectsuggestion = projectsuggestion == null ? null : projectsuggestion.trim();
+        this.projectsuggestion = projectsuggestion;
     }
+
     public Date getSubmittime() {
         return submittime;
     }
+
     public void setSubmittime(Date submittime) {
         this.submittime = submittime;
     }

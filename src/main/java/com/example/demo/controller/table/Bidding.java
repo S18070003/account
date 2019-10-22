@@ -4,6 +4,7 @@ import com.example.demo.model.BiddingAll;
 import com.example.demo.model.HomeAllLedger;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -18,11 +19,12 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class Bidding {
-    public static String mdlpart = "G:\\投标信息\\投标系统修改意见\\投标统计.xlsx";
+    public static String mdlpart = "投标统计.xlsx";
     public static void main(String[] args) throws Exception {
     }
     public static void getXlsx(List<BiddingAll> list, HttpServletResponse response) throws Exception {
         try (FileInputStream is = new FileInputStream(mdlpart); XSSFWorkbook workBook = new XSSFWorkbook(is)) {
+            System.out.println(1);
             XSSFSheet sheet1 = workBook.getSheetAt(0);
 
             CellStyle cellStyle = workBook.createCellStyle();
@@ -40,10 +42,12 @@ public class Bidding {
             cellStyle.setVerticalAlignment(VerticalAlignment.CENTER); // 上下居中
             int startRow=3;
             int l=list.size();
+            CellRangeAddress c = CellRangeAddress.valueOf("D3:F3");
+            sheet1.setAutoFilter(c);
             for(int i=0;i<l;i++){
                 Row row=sheet1.createRow(startRow+i);
                 row.createCell(0).setCellValue(i+1);
-                row.createCell(1).setCellValue(i+1);
+                row.createCell(1).setCellValue(list.get(i).getDepartment());
                 row.createCell(2).setCellValue(list.get(i).getBidid());
                 row.createCell(3).setCellValue(list.get(i).getProjectname());
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd"); // 时间字符串产生方式

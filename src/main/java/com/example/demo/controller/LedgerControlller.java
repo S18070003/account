@@ -6,6 +6,7 @@ import com.example.demo.controller.table.VehicelTechnology;
 import com.example.demo.entity.ContractLedger;
 import com.example.demo.entity.RelationProjectLedger;
 import com.example.demo.model.HomeAllLedger;
+import com.example.demo.model.LedgerSelect;
 import com.example.demo.service.ledger;
 import com.example.demo.service.relationProjectLedger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,8 +99,8 @@ public class LedgerControlller {
         return data;
     }
     @RequestMapping("/HomeLedger")
-    public List<HomeAllLedger> getHomeLedgerAll(){
-        return ledgerSercive.getHomeLedgerAll();
+    public List<HomeAllLedger> getHomeLedgerAll(@RequestBody LedgerSelect ledgerSelect){
+        return ledgerSercive.getHomeLedgerAll(ledgerSelect);
     }
 //    @RequestMapping("/download")
 //    public void export() throws Exception{
@@ -115,11 +116,74 @@ public class LedgerControlller {
 //        VehicelTechnology.getXlsx(tabledataList);
 //    }
     @RequestMapping("/download1")
-    public void export1(HttpServletResponse response) throws Exception{
+    public void export1(String projectid,String projectname,String contractid,String contractyear,String contractid2,String contractsignperson,
+            String contractbelongcnooc,String contractinprocess,String contractsignificant,String contractyearlycnooc,String starttime
+            ,String endtime,HttpServletResponse response) throws Exception{
         //复杂一点的
 //        demoTable.Excel(ledgerSercive.getHomeLedgerAll());
         //复制假数据的，简单
-        Ledger.getXlsx(ledgerSercive.getHomeLedgerAll(),response);
+        LedgerSelect ledgerSelect=new LedgerSelect();
+        if (!projectid.equals("null")){
+            ledgerSelect.setProjectid(projectid);
+        }else {
+            ledgerSelect.setProjectid(null);
+        }
+        if (!projectname.equals("null")){
+            ledgerSelect.setProjectname(projectname);
+        }else {
+            ledgerSelect.setProjectname(null);
+        }
+        if (!contractid.equals("null")){
+            ledgerSelect.setContractid(contractid);
+        }else {
+            ledgerSelect.setContractid(null);
+        }
+        if (!contractid2.equals("null")){
+            ledgerSelect.setContractid2(contractid2);
+        }else {
+            ledgerSelect.setContractid2(null);
+        }
+        if (!contractyear.equals("null")){
+            ledgerSelect.setContractyear(Integer.parseInt(contractyear));
+        }else {
+            ledgerSelect.setContractyear(0);
+        }
+        if (!contractsignperson.equals("null")){
+            ledgerSelect.setContractsignperson(contractsignperson);
+        }else {
+            ledgerSelect.setContractsignperson(null);
+        }
+        if (!contractbelongcnooc.equals("null")){
+            ledgerSelect.setContractbelongcnooc(contractbelongcnooc);
+        }else {
+            ledgerSelect.setContractbelongcnooc(null);
+        }
+        if (!contractinprocess.equals("null")){
+            ledgerSelect.setContractinprocess(contractinprocess);
+        }else {
+            ledgerSelect.setContractinprocess(null);
+        }
+        if (!contractsignificant.equals("null")){
+            ledgerSelect.setContractsignificant(contractsignificant);
+        }else {
+            ledgerSelect.setContractsignificant(null);
+        }
+        if (!contractyearlycnooc.equals("null")){
+            ledgerSelect.setContractyearlycnooc(contractyearlycnooc);
+        }else {
+            ledgerSelect.setContractyearlycnooc(null);
+        }
+        if (!starttime.equals("null")){
+            ledgerSelect.setStarttime(new Date(Long.parseLong(starttime)));
+        }else {
+            ledgerSelect.setStarttime(null);
+        }
+        if (!endtime.equals("null")){
+            ledgerSelect.setStarttime(new Date(Long.parseLong(endtime)));
+        }else {
+            ledgerSelect.setStarttime(null);
+        }
+        Ledger.getXlsx(ledgerSercive.getHomeLedgerAll(ledgerSelect),response);
 //        Ledger.downloadExcelModle(response);
     }
     @RequestMapping("/downloadInProject")
