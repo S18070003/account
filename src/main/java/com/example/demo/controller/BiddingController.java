@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.demo.common.CommonReturnType;
 import com.example.demo.controller.table.Ledger;
+import com.example.demo.controller.table.ProjectProgressWord;
 import com.example.demo.entity.Bidding;
 import com.example.demo.entity.RelationProjectBidding;
 import com.example.demo.model.BiddingAll;
@@ -10,7 +12,9 @@ import com.example.demo.model.HomeAllBidding;
 import com.example.demo.service.bidding;
 import com.example.demo.service.relationProjectBidding;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
@@ -127,5 +131,17 @@ public class BiddingController {
     @RequestMapping("/downloadProjectBidding")
     public void export1(HttpServletResponse response,String projectid) throws Exception{
         com.example.demo.controller.table.Bidding.getXlsx(biddingService.ProjectBiddingAll(projectid),response);
+    }
+    @RequestMapping("/importExcel")//导入excel
+    @ResponseBody
+    @Transactional
+    public CommonReturnType importExcel(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        if(fileName.matches("^.+\\.(?i)(xls)$")){//03版本excel,xls
+            biddingService.importExcel(file,3);
+        }else if (fileName.matches("^.+\\.(?i)(xlsx)$")){//07版本,xlsx
+            biddingService.importExcel(file,7);
+        }
+        return CommonReturnType.create(null);
     }
 }

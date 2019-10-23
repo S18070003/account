@@ -5,6 +5,7 @@ import com.example.demo.model.BiddingBase;
 import com.example.demo.model.LedgerBase;
 import com.example.demo.model.NewProjectInfo;
 import com.example.demo.model.WeeklyBase;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -68,5 +69,5 @@ public interface ProjectMapper {
     WeeklyBase selectWeeklyBase(String projectid);
 
     List<Project> selectAll();
-
+    String getProjectIdByProjectname(@Param("projectname")String projectname);
 }

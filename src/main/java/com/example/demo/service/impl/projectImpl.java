@@ -4,7 +4,11 @@ import com.example.demo.Util.ExcalUtils;
 import com.example.demo.common.BusinessException;
 import com.example.demo.common.EmBusinessError;
 import com.example.demo.dao.ProjectMapper;
+import com.example.demo.dao.RelationProjectWeeklyMapper;
+import com.example.demo.dao.WeeklyMapper;
 import com.example.demo.entity.Project;
+import com.example.demo.entity.RelationProjectWeekly;
+import com.example.demo.entity.Weekly;
 import com.example.demo.model.BiddingBase;
 import com.example.demo.model.LedgerBase;
 import com.example.demo.model.NewProjectInfo;
@@ -30,6 +34,10 @@ import java.util.*;
 public class projectImpl implements project {
     @Autowired
     public ProjectMapper projectMapper;
+    @Autowired
+    public WeeklyMapper weeklyMapper;
+    @Autowired
+    public RelationProjectWeeklyMapper relationProjectWeeklyMapper;
     @Override
     public List<Project> getAll(){
         return projectMapper.selectAll();
@@ -78,7 +86,6 @@ public class projectImpl implements project {
         return projectMapper.getProjectInMonth(starttime,endtime);
     }
     @Override
-    @Transactional
     public void importExcel(MultipartFile file, Integer type){
         if(type == 7){
             try {
@@ -170,11 +177,16 @@ public class projectImpl implements project {
                         projectMapper.insertSelective(project);
                     }
                 }
+                workbook.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }else {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"文件错误");
         }
+    }
+    @Override
+    public String getProjecrIdByProjectName(String projectname){
+        return projectMapper.getProjectIdByProjectname(projectname);
     }
 }

@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Weekly {
-    private  static String mdlpart="G:\\投标信息\\投标系统修改意见\\附件2：市场信息周报模板.xlsx";
+    private  static String mdlpart="附件2：市场信息周报模板.xlsx";
     public static void getExcel(List<WeeklyModel> list, String name,HttpServletResponse response) throws Exception{
         try (FileInputStream is = new FileInputStream(mdlpart); XSSFWorkbook workBook = new XSSFWorkbook(is)) {
 
@@ -38,17 +38,27 @@ public class Weekly {
 
 //第二页
             XSSFSheet sheet2=workBook.getSheetAt(1);
-            int startRow=3;
-            int colomn=12;
+            int startRow=2;
             int l=list.size();
-
-///复制行
-
-                for (int j = 0; j < l ; j++) {
-                    if(j>1){
-                        XSSFRow row = sheet2.createRow(startRow + j);
-                        copyRow(workBook, sheet2.getRow(2), row, false);
+ /////复制行
+            sheet2.shiftRows(2, sheet2.getLastRowNum(), l,true,false);
+            if (sheet2 instanceof XSSFSheet) {
+                XSSFSheet xSSFSheet = (XSSFSheet) sheet2;
+                for (int r = xSSFSheet.getFirstRowNum(); r < sheet2.getLastRowNum() + 1; r++) {
+                    XSSFRow row = xSSFSheet.getRow(r);
+                    if (row != null) {
+                        long rRef = row.getCTRow().getR();
+                        for (Cell cell : row) {
+                            String cRef = ((XSSFCell) cell).getCTCell().getR();
+                            ((XSSFCell) cell).getCTCell().setR(cRef.replaceAll("[0-9]", "") + rRef);
+                        }
                     }
+                }
+            }
+///复制行
+                for (int j = 0; j < l ; j++) {
+                        XSSFRow row = sheet2.createRow(startRow + j);
+                        copyRow(workBook, sheet2.getRow(1), row, false);
                 }
 
 //添加数据
@@ -93,9 +103,9 @@ public class Weekly {
 
             Long time = System.currentTimeMillis();
             try (
-                    FileOutputStream out = new FileOutputStream("C:\\Users\\ASUS\\Desktop\\市场信息周报模板"+time + ".xlsx");
+                    FileOutputStream out = new FileOutputStream("市场信息周报模板"+time + ".xlsx");
             ) {
-                String filePath="C:\\Users\\ASUS\\Desktop\\市场信息周报模板"+time + ".xlsx";
+                String filePath="市场信息周报模板"+time + ".xlsx";
                 workBook.write(out);
                 out.close();
 //                    out.flush();

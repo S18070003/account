@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.ContractLedger;
 import com.example.demo.model.HomeAllLedger;
 import com.example.demo.model.LedgerSelect;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -14,4 +15,5 @@ public interface ledger {
     int delete(int id);
     List<HomeAllLedger> getHomeLedgerAll(LedgerSelect ledgerSelect);
     List<HomeAllLedger> ProjectLedgerAll(String id);
+    void importExcel(MultipartFile file, Integer type);
 }

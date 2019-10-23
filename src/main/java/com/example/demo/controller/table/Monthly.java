@@ -45,7 +45,6 @@ public class Monthly {
                         }
                     }
                 }
-
             }
 
             for (int j = 0; j < l ; j++) {

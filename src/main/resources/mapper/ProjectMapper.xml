@@ -479,6 +479,12 @@
   <select id="getProjectInMonth" resultMap="NewProjectInfo">
     select
     <include refid="New_Project_Info" />
-     from Project where projectbuildtime  &gt;= #{starttime} and projectbuildtime &lt;= #{endtime}
+     from Project
+    <if test="starttime != null and endtime != null">
+      where projectbuildtime  &gt;= #{starttime} and projectbuildtime &lt;= #{endtime}
+    </if>
+  </select>
+  <select id="getProjectIdByProjectname" resultType="java.lang.String">
+    select projectid from Project where projectname=#{projectname}
   </select>
 </mapper>

@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.demo.common.CommonReturnType;
+import com.example.demo.controller.table.ProjectProgressWord;
 import com.example.demo.entity.RelationProjectWeekly;
 import com.example.demo.entity.Weekly;
 import com.example.demo.model.Monthly;
@@ -11,7 +13,9 @@ import com.example.demo.service.project;
 import com.example.demo.service.relationProjectWeekly;
 import com.example.demo.service.weekly;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -100,7 +104,12 @@ public class WeeklyController {
     }
     @RequestMapping("/downloadAllWeekly")
     public void download(String start,String end,String name,HttpServletResponse response) throws Exception{
-        System.out.println(name);
+      if (start.equals("null")){
+          start=null;
+      }
+      if (end.equals("null")){
+          end=null;
+      }
         com.example.demo.controller.table.Weekly.getExcel(weeklyService.selectAllByTime(start,end),name,response);
     }
 //月报
@@ -110,6 +119,12 @@ public class WeeklyController {
     }
     @RequestMapping("/downloadMonthly")
     public void getMonthlyForDownload(String start,String end,HttpServletResponse response) throws Exception {
+        if (start.equals("null")){
+            start=null;
+        }
+        if(end.equals("null")){
+            end=null;
+        }
         List<MonthlyDownload> list =weeklyService.getMonthlyForDownload(start,end);
         List<NewProjectInfo>  list1=projectService.getNewProjectInfo(start,end);
        com.example.demo.controller.table.Monthly.getExcel(list,list1,response);
@@ -118,5 +133,31 @@ public class WeeklyController {
     public List<MonthlyDownload> test(String start,String end) throws Exception {
         List<MonthlyDownload> list =weeklyService.getMonthlyForDownload(start,end);
       return list;
+    }
+
+    @RequestMapping("/exportWord")
+    @Transactional
+    public CommonReturnType exportWord(String start,String end,HttpServletResponse response) throws Exception {
+        if (start.equals("null")){
+            start=null;
+        }
+        if (end.equals("null")){
+            end=null;
+        }
+        ProjectProgressWord.getWord(weeklyService.selectAllByTime(start,end),response);
+        return (null);
+    }
+
+    @RequestMapping("/importExcel")//导入excel
+    @ResponseBody
+    @Transactional
+    public CommonReturnType importExcel(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        if(fileName.matches("^.+\\.(?i)(xls)$")){//03版本excel,xls
+            weeklyService.importExcel(file,3);
+        }else if (fileName.matches("^.+\\.(?i)(xlsx)$")){//07版本,xlsx
+            weeklyService.importExcel(file,7);
+        }
+        return CommonReturnType.create(null);
     }
 }

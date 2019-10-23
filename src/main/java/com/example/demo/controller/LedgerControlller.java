@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.demo.common.CommonReturnType;
 import com.example.demo.controller.table.Ledger;
 import com.example.demo.controller.table.VehicelTechnology;
 import com.example.demo.entity.ContractLedger;
@@ -10,7 +11,9 @@ import com.example.demo.model.LedgerSelect;
 import com.example.demo.service.ledger;
 import com.example.demo.service.relationProjectLedger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
@@ -195,4 +198,16 @@ public class LedgerControlller {
 //        Ledger.downloadExcelModle(response);
     }
 
+    @RequestMapping("/importExcel")//导入excel
+    @ResponseBody
+    @Transactional
+    public CommonReturnType importExcel(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        if(fileName.matches("^.+\\.(?i)(xls)$")){//03版本excel,xls
+            ledgerSercive.importExcel(file,3);
+        }else if (fileName.matches("^.+\\.(?i)(xlsx)$")){//07版本,xlsx
+            ledgerSercive.importExcel(file,7);
+        }
+        return CommonReturnType.create(null);
+    }
 }

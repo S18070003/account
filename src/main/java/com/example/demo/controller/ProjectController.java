@@ -103,10 +103,4 @@ public class ProjectController {
         }
         return CommonReturnType.create(null);
     }
-    @RequestMapping("/exportWord")
-    @Transactional
-    public CommonReturnType exportWord(HttpServletResponse response) throws Exception {
-        ProjectProgressWord.getWord(projectService.getAll(),response);
-        return (null);
-    }
 }

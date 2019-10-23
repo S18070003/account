@@ -21,4 +21,5 @@ public interface project {
     String getCode();
     List<NewProjectInfo> getNewProjectInfo(String starttime,String endtime);
     void importExcel(MultipartFile file, Integer type);
+    String getProjecrIdByProjectName(String projectname);
 }

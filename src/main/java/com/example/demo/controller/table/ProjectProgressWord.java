@@ -1,6 +1,9 @@
 package com.example.demo.controller.table;
 
 import com.example.demo.entity.Project;
+import com.example.demo.model.BiddingAll;
+import com.example.demo.model.HomeAllBidding;
+import com.example.demo.model.WeeklyModel;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.*;
@@ -38,7 +41,7 @@ public class ProjectProgressWord {
 //        getWord(data,tabledataList,pic);
     }
 
-    public static void getWord(List<Project> list, HttpServletResponse response) throws Exception{
+    public static void getWord(List<WeeklyModel> list, HttpServletResponse response) throws Exception{
         try (FileInputStream is = new FileInputStream(mdlpath); XWPFDocument document = new XWPFDocument(is)) {
             //替换掉表格之外的文本对象(仅限文本)
 //            changeText(document, data);
@@ -66,7 +69,7 @@ public class ProjectProgressWord {
                 XWPFTableCell cell2=row.getCell(1);
                 cell2.setText(list.get(i).getProjectname());
                 XWPFTableCell cecll3=row.getCell(2);
-                cecll3.setText(list.get(i).getProjectprogress());
+                cecll3.setText(list.get(i).getProjectcurrent());
 //                List<XWPFTableCell> cellList = row.getTableCells();
 //                String[] rowdata = table1data.get(i);
 //                for (int j = 0; j < cellList.size(); j++) {
