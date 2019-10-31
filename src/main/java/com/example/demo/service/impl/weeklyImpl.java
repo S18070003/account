@@ -160,4 +160,15 @@ public class weeklyImpl implements weekly {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"文件错误");
         }
     }
+    @Override
+    public  List<MonthlyDownload> selectBehindTwoMonth(Date time){
+        return weeklyMapper.selectBehindTwoMonth(time);
+    }
+    @Override
+    public  List<MonthlyDownload> selectBeforeTwoMonth(Date time){
+        return weeklyMapper.selectBeforeTwoMonth(time);
+    }
+    public  List<MonthlyDownload> getAboardAndSighCon(){
+        return weeklyMapper.getAboardAndSighCon();
+    }
 }

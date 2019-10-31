@@ -70,4 +70,8 @@ public interface WeeklyMapper {
     int countMonth();
     List<Monthly> getMonthly();
     List<MonthlyDownload> getMonthlyForDownload(@Param("starttime")String starttime,@Param("endtime")String endtime);
+
+    List<MonthlyDownload> selectBehindTwoMonth(@Param("time")Date time);
+    List<MonthlyDownload> selectBeforeTwoMonth(@Param("time")Date time);
+    List<MonthlyDownload> getAboardAndSighCon();
 }

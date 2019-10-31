@@ -48,6 +48,12 @@ public class projectImpl implements project {
     }
     @Override
     public int delete(String projectid){
+        projectMapper.deleteBiddingFromProject(projectid);
+        projectMapper.deleteRelationProjectBiddingFromProject(projectid);
+        projectMapper.deleteLedgerFromProject(projectid);
+        projectMapper.deleteRelationProjectLedgerFromProject(projectid);
+        projectMapper.deleteWeeklyFromProject(projectid);
+        projectMapper.deleteRelationProjectWeeklyFromProject(projectid);
         return projectMapper.deleteByPrimaryKey(projectid);
     }
     @Override
@@ -74,6 +80,9 @@ public class projectImpl implements project {
     public String getCode(){
         String code;
         String getNum=projectMapper.getCode();
+        if (getNum==null){
+            getNum="0";
+        }
         int num=Integer.parseInt(getNum)+1;
         String num1=Integer.toString(10000+num).substring(1,5);
         SimpleDateFormat format = new SimpleDateFormat("yyyyMM"); // 时间字符串产生方式
@@ -107,7 +116,13 @@ public class projectImpl implements project {
                     project.setBidid( ExcalUtils.handleStringXSSF(row.getCell(5)));
                     project.setBidreceivedate( ExcalUtils.handleDateXSSF(row.getCell(6)));
                     project.setBidstopdate( ExcalUtils.handleDateXSSF(row.getCell(7)));
-                    project.setBidregion( ExcalUtils.handleStringXSSF(row.getCell(8)));
+                    String region= ExcalUtils.handleStringXSSF(row.getCell(8));
+                    if (region =="渤海" || region=="南海东部" ||region=="南海西部"||region=="东海"){
+                        project.setBidabroad("国内");
+                    }else {
+                        project.setBidabroad("海外");
+                    }
+                    project.setBidregion(region);
                     project.setBidsafegrade( ExcalUtils.handleStringXSSF(row.getCell(9)));
                     project.setBidrecordyn( ExcalUtils.handleStringXSSF(row.getCell(10)));
                     project.setBidguaranteeyn( ExcalUtils.handleStringXSSF(row.getCell(11)));

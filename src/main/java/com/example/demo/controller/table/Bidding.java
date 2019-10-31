@@ -19,7 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class Bidding {
-    public static String mdlpart = "投标统计.xlsx";
+    static String root="/var/www/html/model/";
+    public static String mdlpart = root+"BiddingModel.xlsx";
     public static void main(String[] args) throws Exception {
     }
     public static void getXlsx(List<BiddingAll> list, HttpServletResponse response) throws Exception {
@@ -73,9 +74,9 @@ public class Bidding {
             }
             Long time = System.currentTimeMillis();
             try (
-                    FileOutputStream out = new FileOutputStream("C:\\Users\\ASUS\\Desktop\\投标统计表模板"+time + ".xlsx");
+                    FileOutputStream out = new FileOutputStream(root+"投标统计表模板"+time + ".xlsx");
             ) {
-                String filePath="C:\\Users\\ASUS\\Desktop\\投标统计表模板"+time + ".xlsx";
+                String filePath=root+"投标统计表模板"+time + ".xlsx";
                 workBook.write(out);
                 out.close();
                 out.flush();

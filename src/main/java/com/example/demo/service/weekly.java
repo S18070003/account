@@ -6,6 +6,7 @@ import com.example.demo.model.MonthlyDownload;
 import com.example.demo.model.WeeklyModel;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 public interface weekly {
@@ -23,4 +24,7 @@ public interface weekly {
     List<Monthly> getMonthly();
     List<MonthlyDownload> getMonthlyForDownload(String starttime,String endtime);
     void importExcel(MultipartFile file, Integer type);
+    List<MonthlyDownload> selectBehindTwoMonth(Date time);
+    List<MonthlyDownload> selectBeforeTwoMonth(Date time);
+    List<MonthlyDownload> getAboardAndSighCon();
 }

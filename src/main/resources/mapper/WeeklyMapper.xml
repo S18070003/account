@@ -245,4 +245,32 @@
     where w.submitTime &gt;= #{starttime} and w.submitTime &lt;= #{endtime}
     </if>
   </select>
+  <select id="selectBeforeTwoMonth" resultMap="MonthlyDownload">
+    select p.projectid,p.projectname,p.projectgeneral,w.*
+    from Project as p right join RelationProjectWeekly as r
+    on r.projectid=p.projectid and p.bidabroad='海外' left join Weekly as w on r.weeklyid=w.id
+    where p.projectid in (select projectid from RelationProjectWeekly where
+    id in (select id from Weekly where submitTime &lt;=#{time}))
+  </select>
+  <select id="selectBehindTwoMonth" resultMap="MonthlyDownload">
+    select p.projectid,p.projectname,p.projectgeneral,w.*
+    from Project as p right join RelationProjectWeekly as r
+    on r.projectid=p.projectid and p.bidabroad='海外' left join Weekly as w on r.weeklyid=w.id
+    where p.projectid in (select projectid from RelationProjectWeekly where
+    id in (select id from Weekly where submitTime &gt;=#{time}))
+  </select>
+  <select id="getAboardAndSighCon" resultMap="MonthlyDownload">
+     select p.projectid,p.projectname,p.projectgeneral,w.*
+ from Project as p right join RelationProjectWeekly as r
+ on r.projectid=p.projectid and p.bidabroad='海外' left join Weekly as w on r.weeklyid=w.id
+ where p.projectid in (select projectid from RelationProjectWeekly where
+id in (select id from Weekly))
+union
+ select p.projectid,p.projectname,p.projectgeneral,w.*
+from (((RelationProjectLedger as rc inner join ContractLedger as c on c.id=rc.ledgerid)
+inner join Project as p on p.projectid=rc.projectid )
+inner join RelationProjectWeekly as rw on p.projectid=rw.projectid)
+inner join Weekly as w on w.id=rw.weeklyid
+where c.contractsignificant='Yes' and w.submitTime is null
+  </select>
 </mapper>

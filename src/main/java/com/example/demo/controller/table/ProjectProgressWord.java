@@ -19,7 +19,8 @@ import java.math.BigInteger;
 import java.util.*;
 
 public class ProjectProgressWord {
-    public static String mdlpath = "项目进展Word.docx";
+    static String root="/var/www/html/model/";
+    public static String mdlpath = root+"ProjectProgressWord.docx";
 
     public static void main(String[] args) throws Exception {
         Map<String, Object> data = new HashMap<String, Object>();
@@ -92,9 +93,9 @@ public class ProjectProgressWord {
 
 
             long time=System.currentTimeMillis();
-            try(FileOutputStream out=new FileOutputStream(time+".docx")){
+            try(FileOutputStream out=new FileOutputStream(root+time+".docx")){
                 document.write(out);
-                String filePath=time + ".docx";
+                String filePath=root+time + ".docx";
                 out.close();
                 exportWord(response,filePath);
             }

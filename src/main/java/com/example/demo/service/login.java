@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.UserList;
+import com.example.demo.entity.User;
 
 public interface login {
-    UserList login(String username);
+    User login(String username);
 }

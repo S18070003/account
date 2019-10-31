@@ -11,6 +11,7 @@
                         connectionURL="jdbc:sqlserver://localhost:1433;databaseName=account"
                         userId="sa"
                         password="gaoxun520">
+                        <!--password="gaoxun520.">-->
         </jdbcConnection>
         <!-- 生成DataObject类存放地址-->
         <javaModelGenerator targetPackage="com.example.demo.entity" targetProject="src/main/java">
@@ -31,11 +32,15 @@
                <!--enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
                <!--selectByExampleQueryId="false">-->
         <!--</table>-->
-        <table tableName="Project" domainObjectName="Project" enableCountByExample="false"
+        <!--<table tableName="Project" domainObjectName="Project" enableCountByExample="false"-->
+               <!--enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
+               <!--selectByExampleQueryId="false">-->
+        <!--</table>-->
+        <table tableName="User" domainObjectName="User" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
         </table>
-        <!--<table tableName="Userlist" domainObjectName="UserList" enableCountByExample="false"-->
+        <!--<table tableName="LeadFellow" domainObjectName="LeadFellow" enableCountByExample="false"-->
                <!--enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
                <!--selectByExampleQueryId="false">-->
         <!--</table>-->

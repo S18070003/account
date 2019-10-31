@@ -18,7 +18,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Weekly {
-    private  static String mdlpart="附件2：市场信息周报模板.xlsx";
+    static String root="/var/www/html/model/";
+    private  static String mdlpart=root+"WeeklyModel.xlsx";
     public static void getExcel(List<WeeklyModel> list, String name,HttpServletResponse response) throws Exception{
         try (FileInputStream is = new FileInputStream(mdlpart); XSSFWorkbook workBook = new XSSFWorkbook(is)) {
 
@@ -103,9 +104,9 @@ public class Weekly {
 
             Long time = System.currentTimeMillis();
             try (
-                    FileOutputStream out = new FileOutputStream("市场信息周报模板"+time + ".xlsx");
+                    FileOutputStream out = new FileOutputStream(root+"市场信息周报模板"+time + ".xlsx");
             ) {
-                String filePath="市场信息周报模板"+time + ".xlsx";
+                String filePath=root+"市场信息周报模板"+time + ".xlsx";
                 workBook.write(out);
                 out.close();
 //                    out.flush();

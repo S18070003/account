@@ -4,6 +4,9 @@ package com.example.demo.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.common.CommonReturnType;
 import com.example.demo.controller.table.ProjectProgressWord;
+import com.example.demo.dao.BiddingMapper;
+import com.example.demo.dao.ContractLedgerMapper;
+import com.example.demo.dao.WeeklyMapper;
 import com.example.demo.entity.Project;
 import com.example.demo.model.BiddingBase;
 import com.example.demo.model.LedgerBase;
@@ -24,6 +27,12 @@ import java.util.List;
 public class ProjectController {
     @Autowired
     private project projectService;
+    @Autowired
+    private WeeklyMapper weeklyMapper;
+    @Autowired
+    private ContractLedgerMapper contractLedgerMapper;
+    @Autowired
+    private BiddingMapper biddingMapper;
     @RequestMapping("/getAll")
     public List<Project> getAll(){
         return projectService.getAll();
@@ -40,6 +49,7 @@ public class ProjectController {
         return data;
     }
     @RequestMapping("/delete")
+    @Transactional
     public JSONObject delete(String projectid){
         JSONObject data=new JSONObject();
         int x=projectService.delete(projectid);

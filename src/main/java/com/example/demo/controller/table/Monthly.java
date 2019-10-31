@@ -15,11 +15,12 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Monthly {
-    private  static String mdlpart="月报信息表.xlsx";
-    public static void getExcel(List<MonthlyDownload> list, List<NewProjectInfo>  list1,HttpServletResponse response) throws Exception{
+    static String root="/var/www/html/model/";
+    private  static String mdlpart=root+"Monthly.xlsx";
+    public static void getExcel(List<MonthlyDownload> list, List<MonthlyDownload>  list1,List<MonthlyDownload>  list2,HttpServletResponse response) throws Exception{
         try (FileInputStream is = new FileInputStream(mdlpart); XSSFWorkbook workBook = new XSSFWorkbook(is)) {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd"); // 时间字符串产生方式
-////第二页
+////第一页
             XSSFSheet sheet2=workBook.getSheet("市场信息月报新");
             int startRow1=4;
             int startRow2=9;
@@ -28,11 +29,22 @@ public class Monthly {
             int colomn1=3;
             int l=list.size();
             int l2=list1.size();
-            System.out.println(l2);
+            int l3=list2.size();
+            System.out.println(l);
 //
 /////复制行
-            sheet2.shiftRows(startRow1+1, sheet2.getLastRowNum(), l,true,false);
-            sheet2.shiftRows(startRow2 +l+1, sheet2.getLastRowNum(), l2,true,false);
+            if (l>0){
+                sheet2.shiftRows(startRow1+1, sheet2.getLastRowNum(), l,true,false);
+            }
+            if (l2>0){
+                sheet2.shiftRows(startRow2 +l+1, sheet2.getLastRowNum(), l2,true,false);
+            }
+            if (l3>0){
+                sheet2.shiftRows(startRow3 +l+l2+1, sheet2.getLastRowNum(), l3,true,false);
+            }
+//             if (l2>0){
+//                 sheet2.shiftRows(startRow4 +l+l2+l3+1, sheet2.getLastRowNum(), l2,true,false);
+//             }
             if (sheet2 instanceof XSSFSheet) {
                 XSSFSheet xSSFSheet = (XSSFSheet) sheet2;
                 for (int r = xSSFSheet.getFirstRowNum(); r < sheet2.getLastRowNum() + 1; r++) {
@@ -46,7 +58,7 @@ public class Monthly {
                     }
                 }
             }
-
+//第一部分
             for (int j = 0; j < l ; j++) {
                     XSSFRow row = sheet2.createRow(startRow1 + j+1);
                     copyRow(workBook, sheet2.getRow(startRow1), row, false);
@@ -55,7 +67,7 @@ public class Monthly {
 ////添加数据
             for(int i=0;i<l;i++){
                 Row row = sheet2.getRow(i + startRow1);
-                row.setHeightInPoints(60);
+//                row.setHeightInPoints(60);
                 Cell cell0 = row.getCell(0);
                 cell0.setCellValue(i+1);
                 Cell cell1 = row.getCell(1);
@@ -67,23 +79,7 @@ public class Monthly {
                         "下一步工作计划："+list.get(i).getProjectplan();
                 cell2.setCellValue(content);
             }
-
-
-//            第二部分
-/////复制行
-//            if (sheet2 instanceof XSSFSheet) {
-//                XSSFSheet xSSFSheet = (XSSFSheet) sheet2;
-//                for (int r = xSSFSheet.getFirstRowNum(); r < sheet2.getLastRowNum() + 1; r++) {
-//                    XSSFRow row = xSSFSheet.getRow(r);
-//                    if (row != null) {
-//                        long rRef = row.getCTRow().getR();
-//                        for (Cell cell : row) {
-//                            String cRef = ((XSSFCell) cell).getCTCell().getR();
-//                            ((XSSFCell) cell).getCTCell().setR(cRef.replaceAll("[0-9]", "") + rRef);
-//                        }
-//                    }
-//                }
-//            }
+//第二部分
             for (int j = 0; j < l2 ; j++) {
                     XSSFRow row = sheet2.createRow(startRow2+j+l+1);
                     copyRow(workBook, sheet2.getRow(5), row, false);
@@ -93,24 +89,53 @@ public class Monthly {
 ////添加数据
             for(int i=0;i<l2;i++){
                 Row row1 = sheet2.getRow(i+startRow2+l);
-                row1.setHeightInPoints(60);
+//                row1.setHeightInPoints(60);
                 Cell cell0 = row1.getCell(0);
                 cell0.setCellValue(i+1);
                 Cell cell1 = row1.getCell(1);
                 cell1.setCellValue(list1.get(i).getProjectname());
                 Cell cell2 = row1.getCell(2);
-                String content="项目基本情况："+list1.get(i).getProjectgeneral()+"\n"+
-                        "事业部意见："+list1.get(i).getProjectgeneral()+"\n"+
-                        "存在问题："+list1.get(i).getProjectproblem();
-                cell2.setCellValue(content);
+                cell2.setCellValue(list1.get(i).getProjectcurrent());
             }
 //            第三部分
+            for (int j = 0; j < l3 ; j++) {
+                XSSFRow row = sheet2.createRow(startRow3+j+l+l2+1);
+                copyRow(workBook, sheet2.getRow(5), row, false);
+            }
 
+//
+////添加数据
+            for(int i=0;i<l3;i++){
+                Row row1 = sheet2.getRow(i+startRow3+l+l2);
+//                row1.setHeightInPoints(60);
+                Cell cell0 = row1.getCell(0);
+                cell0.setCellValue(i+1);
+                Cell cell1 = row1.getCell(1);
+                cell1.setCellValue(list1.get(i).getProjectname());
+                Cell cell2 = row1.getCell(2);
+                cell2.setCellValue(list1.get(i).getProjectcurrent());
+            }
+///第四部分
+            for (int j = 0; j < l2 ; j++) {
+                XSSFRow row = sheet2.createRow(startRow4+j+l+l2+l3+1);
+                copyRow(workBook, sheet2.getRow(5), row, false);
+            }
+////添加数据
+            for(int i=0;i<l2;i++){
+                Row row1 = sheet2.getRow(i+startRow4+l+l2+l3);
+//                row1.setHeightInPoints(60);
+                Cell cell0 = row1.getCell(0);
+                cell0.setCellValue(i+1);
+                Cell cell1 = row1.getCell(1);
+                cell1.setCellValue(list1.get(i).getProjectname());
+                Cell cell2 = row1.getCell(2);
+                cell2.setCellValue(list1.get(i).getProjectdifficulty());
+            }
             Long time = System.currentTimeMillis();
             try (
-                    FileOutputStream out = new FileOutputStream("C:\\Users\\ASUS\\Desktop\\月报信息表"+time + ".xlsx");
+                    FileOutputStream out = new FileOutputStream(root+"月报信息表"+time + ".xlsx");
             ) {
-                String filePath="C:\\Users\\ASUS\\Desktop\\月报信息表"+time + ".xlsx";
+                String filePath=root+"月报信息表"+time + ".xlsx";
                 workBook.write(out);
                 out.close();
                 downloadExcelModle(response,filePath);

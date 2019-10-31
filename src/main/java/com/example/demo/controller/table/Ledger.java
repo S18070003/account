@@ -16,8 +16,9 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Ledger {
-    public static String mdlpart = "G:\\投标信息\\投标系统修改意见\\附件4：合同台账模板.xlsx";
 
+    static String root="/var/www/html/model/";
+    public static String mdlpart = root+"LedgerModel.xlsx";
     public static void main(String[] args) throws Exception {
     }
     public static void getXlsx(List<HomeAllLedger> list,HttpServletResponse response) throws Exception {
@@ -73,9 +74,9 @@ public class Ledger {
             }
                 Long time = System.currentTimeMillis();
                 try (
-                        FileOutputStream out = new FileOutputStream("C:\\Users\\ASUS\\Desktop\\合同台账模板"+time + ".xlsx");
+                        FileOutputStream out = new FileOutputStream(root+"合同台账模板"+time + ".xlsx");
                         ) {
-                    String filePath="C:\\Users\\ASUS\\Desktop\\合同台账模板"+time + ".xlsx";
+                    String filePath=root+"合同台账模板"+time + ".xlsx";
                     workBook.write(out);
                     out.close();
 //                    out.flush();

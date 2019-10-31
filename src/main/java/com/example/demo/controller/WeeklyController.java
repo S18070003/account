@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -91,7 +92,6 @@ public class WeeklyController {
     }
     @RequestMapping("/delete")
     public JSONObject delete(int id){
-        System.out.println(id);
         JSONObject data=new JSONObject();
         int x=weeklyService.delete(id);
         int y=relationProjectWeeklyService.delete(id);
@@ -119,15 +119,24 @@ public class WeeklyController {
     }
     @RequestMapping("/downloadMonthly")
     public void getMonthlyForDownload(String start,String end,HttpServletResponse response) throws Exception {
-        if (start.equals("null")){
-            start=null;
-        }
-        if(end.equals("null")){
-            end=null;
-        }
-        List<MonthlyDownload> list =weeklyService.getMonthlyForDownload(start,end);
-        List<NewProjectInfo>  list1=projectService.getNewProjectInfo(start,end);
-       com.example.demo.controller.table.Monthly.getExcel(list,list1,response);
+//        if (start.equals("null")){    //弃用 的版本
+//            start=null;
+//        }
+//        if(end.equals("null")){
+//            end=null;
+//        }
+//        List<MonthlyDownload> list =weeklyService.getMonthlyForDownload(start,end);
+//        List<NewProjectInfo>  list1=projectService.getNewProjectInfo(start,end);
+
+        Calendar calendar = Calendar.getInstance(); //得到日历
+        calendar.setTime(new Date());//把当前时间赋给日历
+        calendar.add(calendar.MONTH, -2); //设置为前2月，可根据需求进行修改
+        Date date = calendar.getTime();//获取2个月前的时间
+        System.out.println(date);
+        List<MonthlyDownload> list =weeklyService.selectBeforeTwoMonth(date);
+        List<MonthlyDownload> list1 =weeklyService.selectBehindTwoMonth(date);
+        List<MonthlyDownload> list2 =weeklyService.getAboardAndSighCon();
+       com.example.demo.controller.table.Monthly.getExcel(list,list1,list2,response);
     }
     @RequestMapping("/test")
     public List<MonthlyDownload> test(String start,String end) throws Exception {
