@@ -8,22 +8,26 @@ import com.example.demo.dao.BiddingMapper;
 import com.example.demo.dao.ContractLedgerMapper;
 import com.example.demo.dao.WeeklyMapper;
 import com.example.demo.entity.Project;
+import com.example.demo.entity.User;
 import com.example.demo.model.BiddingBase;
 import com.example.demo.model.LedgerBase;
 import com.example.demo.model.WeeklyBase;
 import com.example.demo.service.project;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 @RestController
 @CrossOrigin
 @ResponseBody
-@RequestMapping("/project")
+@RequestMapping("/web/project")
 public class ProjectController {
     @Autowired
     private project projectService;
@@ -34,71 +38,53 @@ public class ProjectController {
     @Autowired
     private BiddingMapper biddingMapper;
     @RequestMapping("/getAll")
-    public List<Project> getAll(){
-        return projectService.getAll();
+    public CommonReturnType getAll(){
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        List<Integer> checkRange=(List<Integer>)session.getAttribute("Fellow");
+        return CommonReturnType.create(projectService.getAll(checkRange));
     }
     @RequestMapping("/submit")
-    public JSONObject insert(@RequestBody Project project){
-        JSONObject data=new JSONObject();
-        int x=projectService.insert(project);
-        if(x==1){
-            data.put("isinsert",true);
-        }else {
-            data.put("isinsert",false);
-        }
-        return data;
+    public CommonReturnType insert(@RequestBody Project project){
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        User user=(User)session.getAttribute("LOGIN_USER");
+        int id=user.getId();
+        project.setProjectbuilder(id);
+        project.setProjectbuildtime(new Date());
+
+        return CommonReturnType.create(projectService.insert(project));
     }
     @RequestMapping("/delete")
     @Transactional
-    public JSONObject delete(String projectid){
-        JSONObject data=new JSONObject();
-        int x=projectService.delete(projectid);
-        if(x==1){
-            data.put("isDelete",true);
-        }else {
-            data.put("isDelete",false);
-        }
-        return data;
+    public CommonReturnType delete(@RequestBody JSONObject jsonObject){
+        String projectid=jsonObject.getString("projectid");
+        return CommonReturnType.create(projectService.delete(projectid));
     }
     @RequestMapping("/select")
-    public Project select(String projectid){
-        Project project=new Project();
-        project=projectService.select(projectid);
-        if(project!=null){
-            return project;
-        }else {
-            Project project1=new Project();
-            project1.setProjectid("error");
-            return project1;
-        }
-
+    public CommonReturnType select( @RequestBody JSONObject jsonObject){
+        String projectid =jsonObject.getString("projectid");
+        return CommonReturnType.create(projectService.select(projectid));
     }
     @RequestMapping("/update")
-    public JSONObject update(@RequestBody Project project){
-        JSONObject data=new JSONObject();
-        int x=projectService.update(project);
-        if(x==1){
-            data.put("isUpdate",true);
-        }else {
-            data.put("isUpdate",false);
-        }
-        return data;
+    public CommonReturnType update(@RequestBody Project project){
+        return CommonReturnType.create(projectService.update(project));
     }
     @RequestMapping("/getWeeklyBase")
-    public WeeklyBase getWeeklyBase(String projectid){
-        return projectService.getWeeklyBase(projectid);
+    public CommonReturnType getWeeklyBase(String projectid){
+        return CommonReturnType.create(projectService.getWeeklyBase(projectid));
     }
     @RequestMapping("/getBiddingBase")
-    public BiddingBase getBiddingBase(String projectid){
-        return projectService.getBiddingBase(projectid);
+    public CommonReturnType getBiddingBase(String projectid){
+        return CommonReturnType.create(projectService.getBiddingBase(projectid));
     }
     @RequestMapping("/getLedgerBase")
-    public LedgerBase getLedgerBase(String projectid){
-        return projectService.getLedgerBase(projectid);
+    public CommonReturnType getLedgerBase(String projectid){
+        return CommonReturnType.create(projectService.getLedgerBase(projectid));
     }
     @RequestMapping("/getCode")
-    public String getCode(){
-        return projectService.getCode();
+    public CommonReturnType getCode(){
+        return CommonReturnType.create(projectService.getCode());
     }
 
     @RequestMapping("/importExcel")//导入excel

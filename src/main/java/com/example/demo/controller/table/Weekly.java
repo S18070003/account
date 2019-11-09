@@ -19,6 +19,7 @@ import java.util.List;
 
 public class Weekly {
     static String root="/var/www/html/model/";
+//    static String root="";
     private  static String mdlpart=root+"WeeklyModel.xlsx";
     public static void getExcel(List<WeeklyModel> list, String name,HttpServletResponse response) throws Exception{
         try (FileInputStream is = new FileInputStream(mdlpart); XSSFWorkbook workBook = new XSSFWorkbook(is)) {

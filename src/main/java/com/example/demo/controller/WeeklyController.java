@@ -27,7 +27,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @ResponseBody
-@RequestMapping("/weekly")
+@RequestMapping("/web/weekly")
 public class WeeklyController {
     @Autowired
     private weekly weeklyService;
@@ -36,7 +36,7 @@ public class WeeklyController {
     @Autowired
     private project projectService;
     @RequestMapping("/get")
-    public List<WeeklyModel> get(String mode){
+    public CommonReturnType get(String mode){
         List<WeeklyModel> data=new ArrayList<WeeklyModel>();
         if (mode.equals("Week")){
             data= weeklyService.getWeekly();
@@ -45,15 +45,15 @@ public class WeeklyController {
         }else if (mode.equals("All")){
             data= weeklyService.getAll();
         }
-        return data;
+        return CommonReturnType.create(data);
     }
     @RequestMapping("/getWeek")
     public List<WeeklyModel> getWeek(){
         return weeklyService.getWeekly();
     }
     @RequestMapping("/insert")
-    public JSONObject insert(@RequestBody JSONObject json){
-        JSONObject data=new JSONObject();
+    public CommonReturnType insert(@RequestBody JSONObject json){
+//        JSONObject data=new JSONObject();
         Weekly weekly=new Weekly();
         weekly.setProjectcurrent(json.getString("projectcurrent"));
         weekly.setProjectdifficulty(json.getString("projectdifficulty"));
@@ -67,20 +67,14 @@ public class WeeklyController {
         RelationProjectWeekly record=new RelationProjectWeekly();
         record.setProjectid(json.getString("projectid"));
         record.setWeeklyid(x);
-        int result=relationProjectWeeklyService.insert(record);
-        if(result==1){
-            data.put("isinsert",true);
-        }else {
-            data.put("isinsert",false);
-        }
-        return data;
+        return CommonReturnType.create(relationProjectWeeklyService.insert(record));
     }
     @RequestMapping("/getByProjectid")
-    public List<Weekly> getByProjectid(String projectid){
-        return weeklyService.getByProjectid(projectid);
+    public CommonReturnType getByProjectid(String projectid){
+        return CommonReturnType.create(weeklyService.getByProjectid(projectid));
     }
     @RequestMapping("/Count")
-    public JSONObject getCount(){
+    public CommonReturnType getCount(){
         JSONObject data=new JSONObject();
         int x=weeklyService.getCountWeek();
         int y=weeklyService.getCountMonth();
@@ -88,22 +82,17 @@ public class WeeklyController {
         data.put("Week",x);
         data.put("Month",y);
         data.put("All",z);
-        return data;
+        return CommonReturnType.create(data);
     }
     @RequestMapping("/delete")
-    public JSONObject delete(int id){
-        JSONObject data=new JSONObject();
+    @Transactional
+    public CommonReturnType delete(int id){
         int x=weeklyService.delete(id);
         int y=relationProjectWeeklyService.delete(id);
-        if (y==1&&x==1){
-            data.put("isDelete",true);
-        }else {
-            data.put("idDelete",false);
-        }
-        return data;
+        return CommonReturnType.create(x*y);
     }
     @RequestMapping("/downloadAllWeekly")
-    public void download(String start,String end,String name,HttpServletResponse response) throws Exception{
+    public CommonReturnType download(String start,String end,String name,HttpServletResponse response) throws Exception{
       if (start.equals("null")){
           start=null;
       }
@@ -111,14 +100,15 @@ public class WeeklyController {
           end=null;
       }
         com.example.demo.controller.table.Weekly.getExcel(weeklyService.selectAllByTime(start,end),name,response);
+      return (null);
     }
 //月报
     @RequestMapping("/getMonthly")
-    public List<Monthly> getMonthly(){
-        return weeklyService.getMonthly();
+    public CommonReturnType getMonthly(){
+        return CommonReturnType.create(weeklyService.getMonthly());
     }
     @RequestMapping("/downloadMonthly")
-    public void getMonthlyForDownload(String start,String end,HttpServletResponse response) throws Exception {
+    public CommonReturnType getMonthlyForDownload(String start,String end,HttpServletResponse response) throws Exception {
 //        if (start.equals("null")){    //弃用 的版本
 //            start=null;
 //        }
@@ -137,6 +127,7 @@ public class WeeklyController {
         List<MonthlyDownload> list1 =weeklyService.selectBehindTwoMonth(date);
         List<MonthlyDownload> list2 =weeklyService.getAboardAndSighCon();
        com.example.demo.controller.table.Monthly.getExcel(list,list1,list2,response);
+       return CommonReturnType.create(null);
     }
     @RequestMapping("/test")
     public List<MonthlyDownload> test(String start,String end) throws Exception {

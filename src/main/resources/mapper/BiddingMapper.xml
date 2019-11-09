@@ -199,15 +199,20 @@
 	p.bidreceivedate,p.bidrecordyn,p.bidregion,p.bidsafegrade,p.bidservicetype,p.bidstopdate,p.bidworkload,p.projectprogress,p.projectproblem
     from Bidding b,RelationProjectBidding r,Project p
     where r.projectid=p.projectid and r.biddingid=b.id
-    <if test="department != null and department!=''">
-    and  p.department = #{department}
+    <if test="record.department != null and record.department!=''">
+    and  p.department = #{record.department}
     </if>
-    <if test="bidreceivedate != null">
-      and  b.submitTime &gt;= #{bidreceivedate}
+    <if test="record.bidreceivedate != null">
+      and  b.submitTime &gt;= #{record.bidreceivedate}
     </if>
-    <if test="bidstopdate != null">
-      and  b.submitTime &lt;= #{bidstopdate}
+    <if test="record.bidstopdate != null">
+      and  b.submitTime &lt;= #{record.bidstopdate}
     </if>
+    and   p.projectbuilder in (
+    <foreach collection="list"  item="id" index="index" separator=",">
+      #{id}
+    </foreach>
+    )
   </select>
   <select id="ProjectBiddingAll"  parameterType="java.lang.String" resultMap="BaseResultMap2">
     select b.id,b.biddiscardreason,b.bidlossreason,b.bidopenresult,b.bidreview,b.bidtargetmoney,b.submitTime,

@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @ResponseBody
-@RequestMapping("/bidding")
+@RequestMapping("/web/bidding")
 public class BiddingController {
     @Autowired
     private bidding biddingService;
@@ -35,34 +35,24 @@ public class BiddingController {
       return  biddingService.getAll();
     }
     @RequestMapping("/delete")
-    public JSONObject delete(int id,String projectid){
-        JSONObject data=new JSONObject();
+    public CommonReturnType delete(int id,String projectid){
         int y=biddingService.delete(id);
         int z=relationProjectBiddingService.delete(id,projectid);
-        System.out.println(z);
-        if(y+z==2){
-            data.put("isDelete",true);
-        }else{
-            data.put("isDelete",false);
-        }
-        return data;
+        return CommonReturnType.create(y*z);
     }
     @RequestMapping("/selectByProjectid")
-    public JSONObject select(String projectid){
-        JSONObject data=new JSONObject();
-        Bidding bidding=biddingService.getByProjectid(projectid);
-        System.out.println(bidding);
-        if(bidding==null){
-            data.put("result",false);
-        }else {
-            data.put("result",true);
-            data.put("bidding",bidding);
-        }
-        return data;
+    public CommonReturnType select(String projectid){
+        return CommonReturnType.create(biddingService.getByProjectid(projectid));
     }
+
+    /**
+     *
+     * @param json
+     * @return
+     */
     @RequestMapping("/insert")
-    public JSONObject insert(@RequestBody JSONObject json){
-        JSONObject data=new JSONObject();
+    public CommonReturnType insert(@RequestBody JSONObject json){
+//        JSONObject data=new JSONObject();
         Bidding bidding=new Bidding();
         bidding.setBiddiscardreason(json.getString("biddiscardreason"));
         bidding.setBidlossreason(json.getString("bidlossreason"));
@@ -76,36 +66,15 @@ public class BiddingController {
         RelationProjectBidding record = new RelationProjectBidding();
         record.setBiddingid(newrow);
         record.setProjectid(json.getString("projectid"));
-        int result=relationProjectBiddingService.insert(record);
-        if(result==1){
-            data.put("isinsert",true);
-        }else {
-            data.put("isinsert",false);
-        }
-        return data;
+        return CommonReturnType.create(relationProjectBiddingService.insert(record));
     }
     @RequestMapping("/update")
-    public JSONObject update(@RequestBody JSONObject json){
-        System.out.println(json.getInteger("id"));
-        Bidding bidding=new Bidding();
-        bidding.setId(json.getInteger("id"));
-        bidding.setBiddiscardreason(json.getString("biddiscardreason"));
-        bidding.setBidlossreason(json.getString("bidlossreason"));
-        bidding.setBidopenresult(json.getString("bidopenresult"));
-        bidding.setBidreview(json.getString("bidreview"));
-        bidding.setBidtargetmoney(json.getDouble("bidtargetmoney"));
-        JSONObject data=new JSONObject();
-        int x=biddingService.update(bidding);
-        if (x==1){
-            data.put("isUpdate",true);
-        }else {
-            data.put("isUpdate",false);
-        }
-        return data;
+    public CommonReturnType update(@RequestBody Bidding bidding){
+        return CommonReturnType.create(biddingService.update(bidding));
     }
     @RequestMapping("/getHomeBiddingAll")
-    public List<BiddingAll> getHomeBiddingAll(@RequestBody BiddingSelect biddingSelect){
-        return biddingService.AllBiddingAll(biddingSelect);
+    public CommonReturnType getHomeBiddingAll(@RequestBody BiddingSelect biddingSelect){
+        return CommonReturnType.create(biddingService.AllBiddingAll(biddingSelect));
     }
     @RequestMapping("/download")
     public void export(@RequestParam("department") String department,@RequestParam("start")String start,@RequestParam("end")String end,HttpServletResponse response) throws Exception{

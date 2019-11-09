@@ -106,4 +106,9 @@
       biddingid = #{biddingid,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="getBiddingIdByProjectName" parameterType="java.lang.String" resultType="java.lang.Integer">
+   select ISNULL(max(r.biddingid),0) as id from RelationProjectBidding as r left join Project as p
+on p.projectid=r.projectid
+ where p.projectname=#{projectname}
+  </select>
 </mapper>

@@ -21,7 +21,7 @@ import java.util.*;
 @RestController
 @CrossOrigin
 @ResponseBody
-@RequestMapping("/ledger")
+@RequestMapping("/web/ledger")
 public class LedgerControlller {
     @Autowired
     private ledger ledgerSercive;
@@ -32,8 +32,7 @@ public class LedgerControlller {
         return ledgerSercive.getAll();
     }
     @RequestMapping("/insert")
-    public JSONObject insert(@RequestBody JSONObject json){
-        JSONObject data=new JSONObject();
+    public CommonReturnType insert(@RequestBody JSONObject json){
         ContractLedger contractLedger = new ContractLedger();
         contractLedger.setContractid(json.getString("contractid"));
         contractLedger.setContractid2(json.getString("contractid2"));
@@ -66,44 +65,26 @@ public class LedgerControlller {
         String projectid=json.getString("projectid");
         relation.setProjectid(projectid);
         relation.setLedgerid(x);
-        int result=relationProjectLedgerService.insert(relation);
-        if(result==1){
-            data.put("isinsert",true);
-        }else {
-            data.put("isinsert",false);
-        }
-        return data;
+//        int result=relationProjectLedgerService.insert(relation);
+        return CommonReturnType.create(relationProjectLedgerService.insert(relation));
     }
     @RequestMapping("/getByProjectId")
-    public List<ContractLedger> getByProjectId(String projectid){
-        return ledgerSercive.getByProjectId(projectid);
+    public CommonReturnType getByProjectId(String projectid){
+        return CommonReturnType.create(ledgerSercive.getByProjectId(projectid));
     }
     @RequestMapping("/update")
-    public JSONObject update(@RequestBody ContractLedger contractLedger){
-        JSONObject data=new JSONObject();
-        int x=ledgerSercive.update(contractLedger);
-        if (x==1){
-            data.put("isupdata",true);
-        }else {
-            data.put("isupdate",false);
-        }
-        return data;
+    public CommonReturnType update(@RequestBody ContractLedger contractLedger){
+        return CommonReturnType.create(ledgerSercive.update(contractLedger));
     }
     @RequestMapping("/delete")
-    public JSONObject delete(int id){
-        JSONObject data=new JSONObject();
+    public CommonReturnType delete(int id){
         int x=ledgerSercive.delete(id);
         int y=relationProjectLedgerService.delete(id);
-        if(x+y==2){
-            data.put("isdelete",true);
-        }else {
-            data.put("isdelete",false);
-        }
-        return data;
+        return CommonReturnType.create(x*y);
     }
     @RequestMapping("/HomeLedger")
-    public List<HomeAllLedger> getHomeLedgerAll(@RequestBody LedgerSelect ledgerSelect){
-        return ledgerSercive.getHomeLedgerAll(ledgerSelect);
+    public CommonReturnType getHomeLedgerAll(@RequestBody LedgerSelect ledgerSelect){
+        return CommonReturnType.create(ledgerSercive.getHomeLedgerAll(ledgerSelect));
     }
 //    @RequestMapping("/download")
 //    public void export() throws Exception{

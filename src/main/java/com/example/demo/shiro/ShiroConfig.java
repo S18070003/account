@@ -65,10 +65,10 @@ public class ShiroConfig {
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
 
 
-        filterChainDefinitionMap.put("/web/login","anon");//登录页面可以任何人访问
-        filterChainDefinitionMap.put("/web/logout","anon");//退出登录页面可以任何人访问
-        filterChainDefinitionMap.put("/web/sessionTest","anon");//登录页面可以任何人访问
-        filterChainDefinitionMap.put("/web/statistics/**","anon");
+        filterChainDefinitionMap.put("/web/login/login","anon");//登录页面可以任何人访问
+        filterChainDefinitionMap.put("web/login/logout","anon");//退出登录页面可以任何人访问
+        filterChainDefinitionMap.put("web/login/sessionTest","anon");//登录页面可以任何人访问
+        filterChainDefinitionMap.put("web/login/statistics/**","anon");
 
 
 
@@ -76,8 +76,8 @@ public class ShiroConfig {
 
 
 
-        shiroFilterFactoryBean.setLoginUrl("/web/pleaseLogin");
-        shiroFilterFactoryBean.setUnauthorizedUrl("/web/noAuth");
+        shiroFilterFactoryBean.setLoginUrl("/web/login/pleaseLogin");
+        shiroFilterFactoryBean.setUnauthorizedUrl("/web/login/noAuth");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         filtersMap.put("anon", logInterceptor());

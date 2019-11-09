@@ -16,6 +16,7 @@ import java.util.List;
 
 public class Monthly {
     static String root="/var/www/html/model/";
+//    static String root="";
     private  static String mdlpart=root+"Monthly.xlsx";
     public static void getExcel(List<MonthlyDownload> list, List<MonthlyDownload>  list1,List<MonthlyDownload>  list2,HttpServletResponse response) throws Exception{
         try (FileInputStream is = new FileInputStream(mdlpart); XSSFWorkbook workBook = new XSSFWorkbook(is)) {

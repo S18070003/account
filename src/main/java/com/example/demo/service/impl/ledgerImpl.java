@@ -20,6 +20,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +63,10 @@ public class ledgerImpl implements ledger {
     }
     @Override
     public List<HomeAllLedger> getHomeLedgerAll(LedgerSelect ledgerSelect){
-        return contractLedgerMapper.HomeLedgerAll(ledgerSelect);
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        List<Integer> checkRange=(List<Integer>)session.getAttribute("Fellow");
+        return contractLedgerMapper.HomeLedgerAll(ledgerSelect,checkRange);
     }
     @Override
     public List<HomeAllLedger> ProjectLedgerAll(String id){

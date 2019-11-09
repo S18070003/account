@@ -5,7 +5,7 @@ package com.example.demo.common;
  * @date 2019/3/25 20:19
  */
 //包装器业务异常类实现
-public class BusinessException extends RuntimeException implements CommonError{
+public class BusinessException extends RuntimeException implements CommonError {
     private CommonError commonError;
 
     //直接EmBusinessError传参用于构造异常
@@ -14,7 +14,7 @@ public class BusinessException extends RuntimeException implements CommonError{
         this.commonError = commonError;
     }
     //自定义
-    public BusinessException(CommonError commonError,String errMsg){
+    public BusinessException(CommonError commonError, String errMsg){
         super();
         this.commonError = commonError;
         this.commonError.setErrMsg(errMsg);

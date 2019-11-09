@@ -20,6 +20,7 @@ import java.util.List;
 
 public class Bidding {
     static String root="/var/www/html/model/";
+//    static String root="";
     public static String mdlpart = root+"BiddingModel.xlsx";
     public static void main(String[] args) throws Exception {
     }
@@ -66,8 +67,8 @@ public class Bidding {
                 row.createCell(13).setCellValue(list.get(i).getBidopenresult());
                 row.createCell(14).setCellValue(list.get(i).getBiddiscardreason());
                 row.createCell(15).setCellValue(list.get(i).getBidlossreason());
-                row.createCell(16).setCellValue(1);
-                row.createCell(17).setCellValue(i+1);
+                row.createCell(16).setCellValue(list.get(i).getProjectprogress());
+                row.createCell(17).setCellValue(list.get(i).getProjectproblem());
                 for (int j=0;j<18;j++){
                     row.getCell(j).setCellStyle(cellStyle);
                 }

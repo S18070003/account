@@ -20,6 +20,7 @@ import java.util.*;
 
 public class ProjectProgressWord {
     static String root="/var/www/html/model/";
+//    static String root="";
     public static String mdlpath = root+"ProjectProgressWord.docx";
 
     public static void main(String[] args) throws Exception {

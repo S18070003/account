@@ -8,10 +8,11 @@
     <context id="DB2Tables" targetRuntime="MyBatis3">
         <!-- 数据库链接地址账号密码-->
         <jdbcConnection driverClass="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-                        connectionURL="jdbc:sqlserver://localhost:1433;databaseName=account"
+                        connectionURL="jdbc:sqlserver://47.103.14.3:1433;databaseName=account"
                         userId="sa"
-                        password="gaoxun520">
-                        <!--password="gaoxun520.">-->
+                        password="gaoxun520.">
+                        <!--password="gaoxun520">-->
+                            <!--阿里云服务器上有点-->
         </jdbcConnection>
         <!-- 生成DataObject类存放地址-->
         <javaModelGenerator targetPackage="com.example.demo.entity" targetProject="src/main/java">
@@ -36,10 +37,10 @@
                <!--enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
                <!--selectByExampleQueryId="false">-->
         <!--</table>-->
-        <table tableName="User" domainObjectName="User" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false">
-        </table>
+        <!--<table tableName="Users" domainObjectName="User" enableCountByExample="false"-->
+               <!--enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
+               <!--selectByExampleQueryId="false">-->
+        <!--</table>-->
         <!--<table tableName="LeadFellow" domainObjectName="LeadFellow" enableCountByExample="false"-->
                <!--enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
                <!--selectByExampleQueryId="false">-->

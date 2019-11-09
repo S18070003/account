@@ -382,42 +382,47 @@
     p.contractopdepartment,p.contractobject,p.bidoprateregion,c.*
     from ContractLedger c,RelationProjectLedger r,Project p
     where r.projectid=p.projectid and r.ledgerid=c.id
-    <if test="projectid != null and projectid !=''">
-      and p.projectid = #{projectid}
+    <if test="ledgerSelect.projectid != null and ledgerSelect.projectid !=''">
+      and p.projectid = #{ledgerSelect.projectid}
     </if>
-    <if test="projectname != null and projectname !=''">
-      and p.projectname = #{projectname}
+    <if test="ledgerSelect.projectname != null and ledgerSelect.projectname !=''">
+      and p.projectname = #{ledgerSelect.projectname}
     </if>
-    <if test="contractid != null and contractid !=''">
-      and c.contractid = #{contractid}
+    <if test="ledgerSelect.contractid != null and ledgerSelect.contractid !=''">
+      and c.contractid = #{ledgerSelect.contractid}
     </if>
-    <if test="contractyear != 0">
-      and p.contractyear = #{contractyear}
+    <if test="ledgerSelect.contractyear != 0">
+      and p.contractyear = #{ledgerSelect.contractyear}
     </if>
-    <if test="contractid2 != null and contractid2 !=''">
-      and c.contractid2 = #{contractid2}
+    <if test="ledgerSelect.contractid2 != null and ledgerSelect.contractid2 !=''">
+      and c.contractid2 = #{ledgerSelect.contractid2}
     </if>
-    <if test="contractsignperson != null and contractsignperson !=''">
-      and c.contractsignperson = #{contractsignperson}
+    <if test="ledgerSelect.contractsignperson != null and ledgerSelect.contractsignperson !=''">
+      and c.contractsignperson = #{ledgerSelect.contractsignperson}
     </if>
-    <if test="contractbelongcnooc != null and contractbelongcnooc !=''">
-      and c.contractbelongcnooc = #{contractbelongcnooc}
+    <if test="ledgerSelect.contractbelongcnooc != null and ledgerSelect.contractbelongcnooc !=''">
+      and c.contractbelongcnooc = #{ledgerSelect.contractbelongcnooc}
     </if>
-    <if test="contractinprocess != null and contractinprocess !=''">
-      and c.contractinprocess = #{contractinprocess}
+    <if test="ledgerSelect.contractinprocess != null and ledgerSelect.contractinprocess !=''">
+      and c.contractinprocess = #{ledgerSelect.contractinprocess}
     </if>
-    <if test="contractsignificant !=null and contractsignificant !=''">
-      and c.contractsignificant = #{contractsignificant}
+    <if test="ledgerSelect.contractsignificant !=null and ledgerSelect.contractsignificant !=''">
+      and c.contractsignificant = #{ledgerSelect.contractsignificant}
     </if>
-    <if test="contractyearlycnooc !=null and contractyearlycnooc !=''">
-      and c.contractyearlycnooc = #{contractyearlycnooc}
+    <if test="ledgerSelect.contractyearlycnooc !=null and ledgerSelect.contractyearlycnooc !=''">
+      and c.contractyearlycnooc = #{ledgerSelect.contractyearlycnooc}
     </if>
-    <if test="starttime != null">
-      and c.contractsigndate &gt;= #{starttime}
+    <if test="ledgerSelect.starttime != null">
+      and c.contractsigndate &gt;= #{ledgerSelect.starttime}
     </if>
-    <if test="endtime != null">
-      and c.contractsigndate &lt;= #{endtime}
+    <if test="ledgerSelect.endtime != null">
+      and c.contractsigndate &lt;= #{ledgerSelect.endtime}
     </if>
+    and   p.projectbuilder in (
+    <foreach collection="list"  item="id" index="index" separator=",">
+      #{id}
+    </foreach>
+    )
   </select>
   <select id="ProjectLedgerAll" resultMap="BaseResultMap1" >
     select p.projectid,p.projectname,p.contractyear,p.contractdepartment,

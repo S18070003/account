@@ -82,42 +82,103 @@
           from Weekly,RelationProjectWeekly
           where Weekly.id=RelationProjectWeekly.weeklyid and RelationProjectWeekly.projectid=#{projectid,jdbcType=NVARCHAR}
   </select>
-  <select id="selectAll" resultMap="Weekly">
-    select Project.projectname,Project.projectid,Weekly.*,
-    Project.bidregion,Project.department,Project.projectcharger,Project.projectestimateamount,Project.projectgeneral
-    from Weekly,RelationProjectWeekly,Project
-    where  Weekly.id=RelationProjectWeekly.weeklyid and RelationProjectWeekly.projectid=Project.projectid;
-  </select>
-  <select id="selectAllByTime" resultMap="Weekly">
+  <select id="selectAll" resultMap="Weekly" parameterType="java.util.List">
     select Project.projectname,Project.projectid,Weekly.*,
     Project.bidregion,Project.department,Project.projectcharger,Project.projectestimateamount,Project.projectgeneral
     from Weekly,RelationProjectWeekly,Project
     where  Weekly.id=RelationProjectWeekly.weeklyid and RelationProjectWeekly.projectid=Project.projectid
-    <if test="starttime != null">
-      and Weekly.submitTime &gt;=#{starttime} and Weekly.submitTime &lt; dateadd(d, 7, #{starttime})
-      order by Weekly.submitTime
-    </if>
+    and   Project.projectbuilder in (
+    <foreach collection="list"  item="id" index="index" separator=",">
+      #{id}
+    </foreach>
+    )
   </select>
-  <select id="selectWeek" resultMap="Weekly" parameterType="java.util.HashMap">
+  <select id="selectAllByTime" resultMap="Weekly" parameterType="java.util.List">
+    select s.* from (
+    select Project.projectid,Project.projectname,Weekly.*,
+    Project.bidregion,Project.department,Project.projectcharger,Project.projectestimateamount,Project.projectgeneral
+    ,row_number() over (partition by Project.projectid order by Weekly.submittime desc) as group_idx
+    from Weekly,RelationProjectWeekly,Project
+    where  Weekly.id=RelationProjectWeekly.weeklyid and RelationProjectWeekly.projectid=Project.projectid
+    and   Project.projectbuilder in (
+    <foreach collection="list"  item="id" index="index" separator=",">
+      #{id}
+    </foreach>
+    )
+    ) s
+    where s.group_idx = 1
+    <!--select Project.projectname,Project.projectid,Weekly.*,-->
+    <!--Project.bidregion,Project.department,Project.projectcharger,Project.projectestimateamount,Project.projectgeneral-->
+    <!--from Weekly,RelationProjectWeekly,Project-->
+    <!--where  Weekly.id=RelationProjectWeekly.weeklyid and RelationProjectWeekly.projectid=Project.projectid-->
+    <!--<if test="starttime != null">-->
+      <!--and Weekly.submitTime &gt;=#{starttime} and Weekly.submitTime &lt; dateadd(d, 7, #{starttime})-->
+      <!--order by Weekly.submitTime-->
+    <!--</if>-->
+    <!--and   Project.projectbuilder in (-->
+    <!--<foreach collection="list"  item="id" index="index" separator=",">-->
+      <!--#{id}-->
+    <!--</foreach>-->
+    <!--)-->
+  </select>
+  <select id="selectWeek" resultMap="Weekly" parameterType="java.util.List">
     select Project.projectname,Project.projectid,Weekly.*,
     Project.bidregion,Project.department,Project.projectcharger,Project.projectestimateamount,Project.projectgeneral
     from Weekly,RelationProjectWeekly,Project
-    where DATEDIFF(dd,Weekly.submitTime,GETDATE())&lt;=7 and Weekly.id=RelationProjectWeekly.weeklyid and RelationProjectWeekly.projectid=Project.projectid;
+    where DATEDIFF(dd,Weekly.submitTime,GETDATE())&lt;=7 and Weekly.id=RelationProjectWeekly.weeklyid and RelationProjectWeekly.projectid=Project.projectid
+    and   Project.projectbuilder in (
+    <foreach collection="list"  item="id" index="index" separator=",">
+      #{id}
+    </foreach>
+    )
   </select>
-  <select id="selectMonth" resultMap="Weekly" parameterType="java.util.HashMap">
+  <select id="selectMonth" resultMap="Weekly" parameterType="java.util.List">
     select Project.projectname,Project.projectid,Weekly.*,
     Project.bidregion,Project.department,Project.projectcharger,Project.projectestimateamount,Project.projectgeneral
     from Weekly,RelationProjectWeekly,Project
-    where DATEDIFF(dd,Weekly.submitTime,GETDATE())&lt;=30 and Weekly.id=RelationProjectWeekly.weeklyid and RelationProjectWeekly.projectid=Project.projectid;
+    where DATEDIFF(dd,Weekly.submitTime,GETDATE())&lt;=30 and Weekly.id=RelationProjectWeekly.weeklyid and RelationProjectWeekly.projectid=Project.projectid
+    and   Project.projectbuilder in (
+    <foreach collection="list"  item="id" index="index" separator=",">
+      #{id}
+    </foreach>
+    )
   </select>
-  <select id="countAll" parameterType="java.lang.Integer" resultType="integer">
-    SELECT COUNT(*)  FROM Weekly
+  <select id="countAll" parameterType="java.util.List" resultType="integer">
+    SELECT COUNT(*)  FROM Weekly as w
+     join RelationProjectWeekly as r
+     on r.weeklyid=w.id
+     join Project as p
+     on p.projectid=r.projectid
+     where p.projectbuilder in (
+    <foreach collection="list"  item="id" index="index" separator=",">
+      #{id}
+    </foreach>
+    )
   </select>
-  <select id="countWeek" parameterType="java.lang.Integer" resultType="integer" >
-    SELECT COUNT(*)  FROM Weekly where DATEDIFF(dd,Weekly.submitTime,GETDATE())&lt;=7;
+  <select id="countWeek" parameterType="java.util.List" resultType="integer" >
+    SELECT COUNT(*)  FROM Weekly as w
+    join RelationProjectWeekly as r
+    on r.weeklyid=w.id
+    join Project as p
+    on p.projectid=r.projectid
+    where p.projectbuilder in (
+    <foreach collection="list"  item="id" index="index" separator=",">
+      #{id}
+    </foreach>
+    )
+    and DATEDIFF(dd,w.submitTime,GETDATE())&lt;=7;
   </select>
-  <select id="countMonth"  parameterType="java.lang.Integer" resultType="integer">
-    SELECT COUNT(*)  FROM Weekly where DATEDIFF(dd,Weekly.submitTime,GETDATE())&lt;=30;
+  <select id="countMonth"  parameterType="java.util.List" resultType="integer">
+    SELECT COUNT(*)  FROM Weekly as w
+    join RelationProjectWeekly as r
+    on r.weeklyid=w.id
+    join Project as p
+    on p.projectid=r.projectid
+    where p.projectbuilder in (
+    <foreach collection="list"  item="id" index="index" separator=",">
+      #{id}
+    </foreach>
+    ) and DATEDIFF(dd,w.submitTime,GETDATE())&lt;=30;
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from Weekly
@@ -234,9 +295,14 @@
       submitTime = #{submittime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="getMonthly" resultMap="Monthly" parameterType="java.util.HashMap">
+  <select id="getMonthly" resultMap="Monthly" parameterType="java.util.List">
     select Project.projectname,Project.projectid,Weekly.id,Weekly.projecthistory,Weekly.projectcurrent from Weekly,RelationProjectWeekly,Project
-    where Weekly.id=RelationProjectWeekly.weeklyid and RelationProjectWeekly.projectid=Project.projectid;
+    where Weekly.id=RelationProjectWeekly.weeklyid and RelationProjectWeekly.projectid=Project.projectid
+    and Project.projectbuilder in (
+    <foreach collection="list"  item="id" index="index" separator=",">
+      #{id}
+    </foreach>
+    )
   </select>
   <select id="getMonthlyForDownload" resultMap="MonthlyDownload" >
     select p.projectid,p.projectname,p.projectgeneral,w.* from Project as p right join RelationProjectWeekly as r
@@ -245,21 +311,31 @@
     where w.submitTime &gt;= #{starttime} and w.submitTime &lt;= #{endtime}
     </if>
   </select>
-  <select id="selectBeforeTwoMonth" resultMap="MonthlyDownload">
+  <select id="selectBeforeTwoMonth" parameterType="java.util.List" resultMap="MonthlyDownload">
     select p.projectid,p.projectname,p.projectgeneral,w.*
     from Project as p right join RelationProjectWeekly as r
     on r.projectid=p.projectid and p.bidabroad='海外' left join Weekly as w on r.weeklyid=w.id
     where p.projectid in (select projectid from RelationProjectWeekly where
     id in (select id from Weekly where submitTime &lt;=#{time}))
+    and p.projectbuilder in (
+    <foreach collection="list"  item="id" index="index" separator=",">
+      #{id}
+    </foreach>
+    )
   </select>
-  <select id="selectBehindTwoMonth" resultMap="MonthlyDownload">
+  <select id="selectBehindTwoMonth" parameterType="java.util.List" resultMap="MonthlyDownload">
     select p.projectid,p.projectname,p.projectgeneral,w.*
     from Project as p right join RelationProjectWeekly as r
     on r.projectid=p.projectid and p.bidabroad='海外' left join Weekly as w on r.weeklyid=w.id
     where p.projectid in (select projectid from RelationProjectWeekly where
     id in (select id from Weekly where submitTime &gt;=#{time}))
+    and p.projectbuilder in (
+    <foreach collection="list"  item="id" index="index" separator=",">
+      #{id}
+    </foreach>
+    )
   </select>
-  <select id="getAboardAndSighCon" resultMap="MonthlyDownload">
+  <select id="getAboardAndSighCon" parameterType="java.util.List" resultMap="MonthlyDownload">
      select p.projectid,p.projectname,p.projectgeneral,w.*
  from Project as p right join RelationProjectWeekly as r
  on r.projectid=p.projectid and p.bidabroad='海外' left join Weekly as w on r.weeklyid=w.id
@@ -272,5 +348,10 @@ inner join Project as p on p.projectid=rc.projectid )
 inner join RelationProjectWeekly as rw on p.projectid=rw.projectid)
 inner join Weekly as w on w.id=rw.weeklyid
 where c.contractsignificant='Yes' and w.submitTime is null
+    and p.projectbuilder in (
+    <foreach collection="list"  item="id" index="index" separator=",">
+      #{id}
+    </foreach>
+    )
   </select>
 </mapper>

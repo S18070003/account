@@ -21,6 +21,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,8 +64,14 @@ public class biddingImpl implements bidding {
     public List<HomeAllBidding> getHomeBiddingAll(){
         return biddingMapper.getHomeBiddingAll();
     }
+
     @Override
-    public List<BiddingAll>  AllBiddingAll(BiddingSelect record){ return biddingMapper.AllBiddingAll(record);}
+    public List<BiddingAll> AllBiddingAll(BiddingSelect record) {
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        List<Integer> checkRange=(List<Integer>)session.getAttribute("Fellow");
+        return biddingMapper.AllBiddingAll(record,checkRange);
+    }
     @Override
     public List<BiddingAll> ProjectBiddingAll(String id){
         return biddingMapper.ProjectBiddingAll(id);
@@ -87,21 +96,27 @@ public class biddingImpl implements bidding {
                     bidding.setBidlossreason(ExcalUtils.handleStringXSSF(row.getCell(5)));
                     bidding.setSubmittime(new Date());
 
-                    biddingMapper.insertSelective(bidding);
-
-                    int id=bidding.getId();
                     String name=ExcalUtils.handleStringXSSF(row.getCell(0));
-                    String projectid=projectMapper.getProjectIdByProjectname(name);
-                    if (projectid ==null){
-                        continue; //如果查出结果为空，跳出继续操作
+                    int x=relationProjectBiddingMapper.getBiddingIdByProjectName(name);
+                    if (x==0){
+                        biddingMapper.insertSelective(bidding);
+
+                        int id=bidding.getId();
+
+                        String projectid=projectMapper.getProjectIdByProjectname(name);
+                        if (projectid ==null){
+                            continue; //如果查出结果为空，跳出继续操作
+                        }
+                        RelationProjectBidding relationProjectBidding=new RelationProjectBidding();
+
+                        relationProjectBidding.setProjectid(projectid);
+                        relationProjectBidding.setBiddingid(id);
+
+                        relationProjectBiddingMapper.insertSelective(relationProjectBidding);
+                    }else {
+                        bidding.setId(x);
+                        biddingMapper.updateByPrimaryKeySelective(bidding);
                     }
-                    RelationProjectBidding relationProjectBidding=new RelationProjectBidding();
-
-                    relationProjectBidding.setProjectid(projectid);
-                    relationProjectBidding.setBiddingid(id);
-
-                    relationProjectBiddingMapper.insertSelective(relationProjectBidding);
-
                 }
                 workbook.close();
             } catch (IOException e) {
@@ -123,17 +138,26 @@ public class biddingImpl implements bidding {
                     bidding.setBiddiscardreason(ExcalUtils.handleStringHSSF(row.getCell(4)));
                     bidding.setBidlossreason(ExcalUtils.handleStringHSSF(row.getCell(5)));
                     bidding.setSubmittime(new Date());
-                    biddingMapper.insertSelective(bidding);
-                    int id=bidding.getId();
+
                     String name=ExcalUtils.handleStringHSSF(row.getCell(0));
-                    String projectid=projectMapper.getProjectIdByProjectname(name);
-                    if (projectid ==null){
-                        continue; //如果查出结果为空，跳出继续操作
+                    int x=relationProjectBiddingMapper.getBiddingIdByProjectName(name);
+                    if (x==0){
+                        biddingMapper.insertSelective(bidding);
+                        int id=bidding.getId();
+
+                        String projectid=projectMapper.getProjectIdByProjectname(name);
+                        if (projectid ==null){
+                            continue; //如果查出结果为空，跳出继续操作
+                        }
+                        RelationProjectBidding relationProjectBidding=new RelationProjectBidding();
+                        relationProjectBidding.setProjectid(projectid);
+                        relationProjectBidding.setBiddingid(id);
+                        relationProjectBiddingMapper.insertSelective(relationProjectBidding);
+                    }else {
+                        bidding.setId(x);
+                        biddingMapper.updateByPrimaryKeySelective(bidding);
                     }
-                    RelationProjectBidding relationProjectBidding=new RelationProjectBidding();
-                    relationProjectBidding.setProjectid(projectid);
-                    relationProjectBidding.setBiddingid(id);
-                    relationProjectBiddingMapper.insertSelective(relationProjectBidding);
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();

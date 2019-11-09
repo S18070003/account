@@ -1,5 +1,6 @@
 package com.example.demo.shiro;
 
+import com.example.demo.service.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class UserRealm extends AuthorizingRealm {
+    @Autowired
+    public User userService;
     /*
      * 执行授权逻辑
      * @param principalCollection
@@ -55,14 +58,15 @@ public class UserRealm extends AuthorizingRealm {
             System.out.println("执行认证逻辑");
             //获得数据库账号与密码
             Subject subject = SecurityUtils.getSubject();
-//            String username=(String) token.getPrincipal();
-//            Session session = subject.getSession();
-//            SysAdministrator sysUser=sysAdministratorService.selectAdminByUsername(username);*/
-//            if(sysUser==null){
-//                return null;
-//            }
-            //return new SimpleAuthenticationInfo(sysUser,sysUser.getPassword(),getName());
-            return new SimpleAuthenticationInfo("abc","abc",getName());
+            String username=(String) token.getPrincipal();
+        System.out.println(username);
+            Session session = subject.getSession();
+            com.example.demo.entity.User sysUser=userService.selectUserByUsername(username);
+            if(sysUser==null){
+                return null;
+            }
+            return new SimpleAuthenticationInfo(sysUser,sysUser.getPassword(),getName());
+//            return new SimpleAuthenticationInfo("abc","abc",getName());
     }
     @Override
     public String getName(){

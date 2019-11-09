@@ -19,6 +19,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,19 +42,31 @@ public class weeklyImpl implements weekly {
     public RelationProjectWeeklyMapper relationProjectWeeklyMapper;
     @Override
     public List<WeeklyModel> getAll(){
-        return weeklyMapper.selectAll();
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        List<Integer> checkRange=(List<Integer>)session.getAttribute("Fellow");
+        return weeklyMapper.selectAll(checkRange);
     }
     @Override
     public List<WeeklyModel> selectAllByTime(String starttime,String endtime){
-        return weeklyMapper.selectAllByTime(starttime,endtime);
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        List<Integer> checkRange=(List<Integer>)session.getAttribute("Fellow");
+        return weeklyMapper.selectAllByTime(starttime,endtime,checkRange);
     }
     @Override
     public List<WeeklyModel> getWeekly(){
-        return weeklyMapper.selectWeek();
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        List<Integer> checkRange=(List<Integer>)session.getAttribute("Fellow");
+        return weeklyMapper.selectWeek(checkRange);
     }
     @Override
     public List<WeeklyModel> getMonth(){
-        return weeklyMapper.selectMonth();
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        List<Integer> checkRange=(List<Integer>)session.getAttribute("Fellow");
+        return weeklyMapper.selectMonth(checkRange);
     }
     @Override
     public int insert(Weekly weekly){
@@ -63,15 +78,24 @@ public class weeklyImpl implements weekly {
     }
     @Override
     public int getCountAll(){
-        return weeklyMapper.countAll();
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        List<Integer> checkRange=(List<Integer>)session.getAttribute("Fellow");
+        return weeklyMapper.countAll(checkRange);
     }
     @Override
     public  int getCountWeek(){
-        return weeklyMapper.countWeek();
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        List<Integer> checkRange=(List<Integer>)session.getAttribute("Fellow");
+        return weeklyMapper.countWeek(checkRange);
     }
     @Override
     public int getCountMonth(){
-        return weeklyMapper.countMonth();
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        List<Integer> checkRange=(List<Integer>)session.getAttribute("Fellow");
+        return weeklyMapper.countMonth(checkRange);
     }
     @Override
     public int delete(int weeklyId){
@@ -79,7 +103,10 @@ public class weeklyImpl implements weekly {
     }
     @Override
     public List<Monthly> getMonthly(){
-        return weeklyMapper.getMonthly();
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        List<Integer> checkRange=(List<Integer>)session.getAttribute("Fellow");
+        return weeklyMapper.getMonthly(checkRange);
     };
     @Override
     public List<MonthlyDownload> getMonthlyForDownload(String starttime,String endtime){
@@ -162,13 +189,22 @@ public class weeklyImpl implements weekly {
     }
     @Override
     public  List<MonthlyDownload> selectBehindTwoMonth(Date time){
-        return weeklyMapper.selectBehindTwoMonth(time);
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        List<Integer> checkRange=(List<Integer>)session.getAttribute("Fellow");
+        return weeklyMapper.selectBehindTwoMonth(time,checkRange);
     }
     @Override
     public  List<MonthlyDownload> selectBeforeTwoMonth(Date time){
-        return weeklyMapper.selectBeforeTwoMonth(time);
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        List<Integer> checkRange=(List<Integer>)session.getAttribute("Fellow");
+        return weeklyMapper.selectBeforeTwoMonth(time,checkRange);
     }
     public  List<MonthlyDownload> getAboardAndSighCon(){
-        return weeklyMapper.getAboardAndSighCon();
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        List<Integer> checkRange=(List<Integer>)session.getAttribute("Fellow");
+        return weeklyMapper.getAboardAndSighCon(checkRange);
     }
 }

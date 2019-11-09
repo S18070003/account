@@ -16,8 +16,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Ledger {
-
     static String root="/var/www/html/model/";
+//    static String root="";
     public static String mdlpart = root+"LedgerModel.xlsx";
     public static void main(String[] args) throws Exception {
     }

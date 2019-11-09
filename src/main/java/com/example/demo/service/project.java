@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface project {
-    List<Project> getAll();
+    List<Project> getAll(List<Integer> list);
     int insert(Project project);
     int delete(String projectid);
     Project select(String projectid);

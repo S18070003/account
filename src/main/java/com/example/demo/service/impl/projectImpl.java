@@ -8,6 +8,7 @@ import com.example.demo.dao.RelationProjectWeeklyMapper;
 import com.example.demo.dao.WeeklyMapper;
 import com.example.demo.entity.Project;
 import com.example.demo.entity.RelationProjectWeekly;
+import com.example.demo.entity.User;
 import com.example.demo.entity.Weekly;
 import com.example.demo.model.BiddingBase;
 import com.example.demo.model.LedgerBase;
@@ -20,6 +21,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,8 +43,8 @@ public class projectImpl implements project {
     @Autowired
     public RelationProjectWeeklyMapper relationProjectWeeklyMapper;
     @Override
-    public List<Project> getAll(){
-        return projectMapper.selectAll();
+    public List<Project> getAll(List<Integer> list){
+        return projectMapper.selectAll(list);
     }
     @Override
     public int insert(Project project){
@@ -79,14 +83,22 @@ public class projectImpl implements project {
     @Override
     public String getCode(){
         String code;
-        String getNum=projectMapper.getCode();
+        String getSt=projectMapper.getCode();
+
+        String getTime=getSt.substring(0,6);
+        String getNum = getSt.substring(7,11);
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMM"); // 时间字符串产生方式
+        String uidTime = format.format(new Date()); // 组合流水号前一部分，时间字符串，如：201910
+        System.out.println(getTime);
+        System.out.println(getNum);
+        if (!uidTime.equals(getTime)){
+            getNum="0";
+        }
         if (getNum==null){
             getNum="0";
         }
         int num=Integer.parseInt(getNum)+1;
         String num1=Integer.toString(10000+num).substring(1,5);
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMM"); // 时间字符串产生方式
-        String uidTime = format.format(new Date()); // 组合流水号前一部分，时间字符串，如：1601
         code="YS-"+uidTime+"-"+num1;
         return code;
     }
@@ -96,6 +108,10 @@ public class projectImpl implements project {
     }
     @Override
     public void importExcel(MultipartFile file, Integer type){
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        User user=(User)session.getAttribute("LOGIN_USER");
+        int builderId=user.getId();
         if(type == 7){
             try {
                 XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
@@ -140,7 +156,7 @@ public class projectImpl implements project {
                     project.setContractobject( ExcalUtils.handleStringXSSF(row.getCell(23)));
 
                     project.setProjectbuildtime(new Date());
-
+                    project.setProjectbuilder(builderId);
                     if(!project.getProjectid().equals("")){
                         projectMapper.insertSelective(project);
                     }
@@ -187,7 +203,7 @@ public class projectImpl implements project {
                     project.setContractopdepartment( ExcalUtils.handleStringHSSF(row.getCell(22)));
                     project.setContractobject( ExcalUtils.handleStringHSSF(row.getCell(23)));
                     project.setProjectbuildtime(new Date());
-
+                    project.setProjectbuilder(builderId);
                     if(!project.getProjectid().equals("")){
                         projectMapper.insertSelective(project);
                     }
